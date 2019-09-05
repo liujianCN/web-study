@@ -13,14 +13,14 @@
    
    ```
 
-   
-
 2. **创建路由实例，传入路由映射配置**
  ```javascript
-   const router = new Router({
+//more模式为hash模式，配置mode：history改变为history模式
+const router = new Router({
      routes: [
        ...baseRouter
-     ]
+     ],
+       mode:'history'
    });
    //可选配置全局路由守卫
    /**
@@ -129,8 +129,6 @@
    
    </style>
    ```
-
-   
 
 2. 配置路由映射
 
