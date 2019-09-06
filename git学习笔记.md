@@ -23,3 +23,6 @@ git push -u origin master
 
 - **git push -u origin master**
   - 将本地仓库代码提交到远程仓库的master分支
+
+- **git pull**
+  - 从远程仓库里拉取最新的代码
