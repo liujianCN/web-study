@@ -1,4 +1,4 @@
-# VueX
+# Vuex
 
 ​	`Vuex` 是一个专为 `Vue.js` 应用程序开发的**状态管理模式**。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
 
@@ -21,7 +21,7 @@
 
 ![](https://vuex.vuejs.org/vuex.png)
 
-# VueX的安装
+# Vuex的安装
 
 - 目录结构
   - assets
@@ -60,7 +60,7 @@ const vm = new Vue({
 }).$mount('#app')
 ```
 
-### new VueX.store 的option
+### new Vuex.store 的option
 
 ```js
 const store = new VueX.store({
@@ -101,3 +101,74 @@ const store = new VueX.store({
     - mutations：修改`store`中的`state`，必须是同步。
     - 必须同步，以便`devtools`能监听到state的改变。
   - render：store中的数据的改变，触发组件的`render`，重新渲染页面。
+
+# State
+
+### 单一状态树 （single source of truth）
+
+Vuex 使用**单一状态树**——是的，用一个对象就包含了全部的应用层级状态。至此它便作为一个“唯一数据源 ([SSOT](https://en.wikipedia.org/wiki/Single_source_of_truth))”而存在。这也意味着，每个应用将仅仅包含一个 store 实例。单一状态树让我们能够直接地定位任一特定的状态片段，在调试的过程中也能轻易地取得整个当前应用状态的快照。
+
+单状态树和模块化并不冲突——在后面的章节里我们会讨论如何将状态和状态变更事件分布到各个子模块中。
+
+### 在 `Vue 组件中获得 `Vuex` 状态
+
+那么我们如何在 Vue 组件中展示状态呢？由于 Vuex 的状态存储是响应式的，从 store 实例中读取状态最简单的方法就是在[计算属性](https://cn.vuejs.org/guide/computed.html)中返回某个状态：
+
+```js
+// 创建一个 Counter 组件
+const Counter = {
+  template: `<div>{{ count }}</div>`,
+  computed: {
+    count () {
+      return store.state.count
+    }
+  }
+}
+```
+
+每当 `store.state.count` 变化的时候, 都会重新求取计算属性，并且触发更新相关联的 DOM。
+
+然而，这种模式导致组件依赖全局状态单例。在模块化的构建系统中，在每个需要使用 state 的组件中需要频繁地导入，并且在测试组件时需要模拟状态。
+
+`Vuex` 通过 `store` 选项，提供了一种机制将状态从根组件“注入”到每一个子组件中（需调用 `Vue.use(Vuex)`）：
+
+```js
+const app = new Vue({
+  el: '#app',
+  // 把 store 对象提供给 “store” 选项，这可以把 store 的实例注入所有的子组件
+  store,
+  components: { Counter },
+  template: `
+    <div class="app">
+      <counter></counter>
+    </div>
+  `
+})
+```
+
+通过在根实例中注册 `store` 选项，该 store 实例会注入到根组件下的所有子组件中，且子组件能通过 `this.$store` 访问到。让我们更新下 `Counter` 的实现：
+
+```js
+const Counter = {
+  template: `<div>{{ count }}</div>`,
+  computed: {
+    count () {
+      return this.$store.state.count
+    }
+  }
+}
+```
+
+# Getter
+
+有时候需求需要从store中的state中派生一些数据。
+
+```js
+//例如对store中的数据进行过滤并处理。
+computed: {
+  doneTodosCount () {
+    return this.$store.state.todos.filter(todo => todo.done).length
+  }
+}
+```
+
