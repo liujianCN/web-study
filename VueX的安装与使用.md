@@ -104,13 +104,13 @@ const store = new VueX.store({
 
 # State
 
-### 单一状态树 （single source of truth）
+## 单一状态树 （single source of truth）
 
 Vuex 使用**单一状态树**——是的，用一个对象就包含了全部的应用层级状态。至此它便作为一个“唯一数据源 ([SSOT](https://en.wikipedia.org/wiki/Single_source_of_truth))”而存在。这也意味着，每个应用将仅仅包含一个 store 实例。单一状态树让我们能够直接地定位任一特定的状态片段，在调试的过程中也能轻易地取得整个当前应用状态的快照。
 
 单状态树和模块化并不冲突——在后面的章节里我们会讨论如何将状态和状态变更事件分布到各个子模块中。
 
-### 在 `Vue` 组件中获得`Vuex` 状态
+## 在 `Vue` 组件中获得`Vuex` 状态
 
 那么我们如何在 Vue 组件中展示状态呢？由于 Vuex 的状态存储是响应式的，从 store 实例中读取状态最简单的方法就是在[计算属性](https://cn.vuejs.org/guide/computed.html)中返回某个状态：
 
@@ -181,19 +181,113 @@ Vuex允许我们在store中定义getter（ **可以认为是store计算属性 **
   ```js
   const store = new vuex.store({
       state:[1,2,3,4,5],
-      getter:{
+      getters:{
           moreThanOne:state => state.filter( item => item > 1 )
       }
   })
   ```
 
-- 通过属性访问
+## **通过属性访问**
 
-  - `Getter` 会暴露$store.getters，可以通过属性访问这些值。
+- `Getter` 会暴露$store.getters，可以通过属性访问这些值。
 
-    ```js
-    this.$store.getters.moreThanOne //[2,3,4,5]
-    ```
+  ```js
+  this.$store.getters.moreThanOne //[2,3,4,5]
+  ```
 
-  - `Getter` 也可以接收其他Getter作为第二个参数。
+- `Getter` 也可以接收其他Getter作为第二个参数。
+
+  ```js
+  geeters:{
+      //...
+      count: (state,getters) => {
+          return getters.moreThanOne.length
+      }
+  }
+  ```
+
+- 可以在组件中使用它
+
+  ```js
+  computed:{
+      moreThanOne(){
+          return this.$store.getters.moreThanOne
+      },
+      count(){
+          return this.$store.getters.count
+      },
+  }
+  ```
+
+- 注意，`getters`再通过属性访问时，是作为`vue`的响应式系统的一部分缓存其中的。
+
+
+
+## **通过方法访问**
+
+- 你也可以让getter返回一个函数，来实现给getter传参
+
+  ```js
+  getters:{
+      //...
+      getTodoById: state => id => state.todos.find(todo => todo.id === id )
+  }
+  ```
+
+  ```js
+  this.$store.getters.getTodoById(2)
+  //返回id为2的todo
+  ```
+
+- 注意，通过方法访问getter时，每次都会调用getter，不会缓存。
+
+
+
+## **`mapGetter`** **辅助函数**
+
+- `mapGetter`辅助函数仅仅是将store中getter映射到局部计算属性。
+
+```vue
+import { mapGetter } from 'vuex';
+
+export default {
+	//...
+computed:{
+//...展开运算符，将getter混入computed中
+	...mapGetter([
+		moreThanOne,
+		count,
+		getTodoById
+	])
+  }
+}
+```
+
+- 如果你想要将`getter` 重起一个名字，可以使用对象方式。
+
+  ```vue
+  ...mapGetter({
+  	//将`this.todeId`映射为`this.$store.getters.getTodoById`
+  	todoId: getTodoById
+  })
+  ```
+
+  
+
+# Mutation
+
+更改`vuex`的`store`的状态的唯一方法是提交mutation。它非常类似事件。每个mutation都有一个字符串的事件类型（**type**）和一个回调函数（handler）。这个回调函数就是进行状态修改的地方，并且它会接受**`state`**作为第一个参数。
+
+```js
+const store = new vuex.store({
+    state:{
+        count:1
+    },
+    mutations:{
+        increment(state){
+            state++
+        }
+    }
+})
+```
 
