@@ -243,18 +243,18 @@ Vuex允许我们在store中定义getter（ **可以认为是store计算属性 **
 
 
 
-## **`mapGetter`** **辅助函数**
+## **`mapGetters`** **辅助函数**
 
-- `mapGetter`辅助函数仅仅是将store中getter映射到局部计算属性。
+- `mapGetters`辅助函数仅仅是将store中getter映射到**局部计算属性**。
 
 ```vue
-import { mapGetter } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	//...
 computed:{
 //...展开运算符，将getter混入computed中
-	...mapGetter([
+	...mapGetters([
 		moreThanOne,
 		count,
 		getTodoById
@@ -266,7 +266,7 @@ computed:{
 - 如果你想要将`getter` 重起一个名字，可以使用对象方式。
 
   ```vue
-  ...mapGetter({
+  ...mapGetters({
   	//将`this.todeId`映射为`this.$store.getters.getTodoById`
   	todoId: getTodoById
   })
@@ -276,18 +276,321 @@ computed:{
 
 # Mutation
 
-更改`vuex`的`store`的状态的唯一方法是提交mutation。它非常类似事件。每个mutation都有一个字符串的事件类型（**type**）和一个回调函数（handler）。这个回调函数就是进行状态修改的地方，并且它会接受**`state`**作为第一个参数。
+​	更改`vuex`的`store`的状态的唯一方法是提交mutation。它非常类似事件。每个mutation都有一个字符串的事件类型（**type**）和一个回调函数（handler）。这个回调函数就是进行状态修改的地方，并且它会接受**`state`**作为第一个参数。
+
+- #### 注册
+
+  ```js
+  const store = new vuex.store({
+      state:{
+          count:1
+      },
+      mutations:{
+          increment(state){
+              state++
+          }
+      }
+  })
+  ```
+
+- #### 触发
+
+  ​	你不能直接调用`mutations`里的handler，更像是一个事件注册，当你触发一个类型为`increment`时mutation时，此函数被调用。此时只需要使用`store.commit`触发increment.
+
+  ```js
+  this.$store.commit('increment')
+  ```
+
+  
+
+## 提交载荷（payload）
+
+- #### 你可以在commit的时候传入额外的参数，即mutation的载荷（payload）。
+
+  ```js
+  //......
+  mutations:{
+      increment(state,n){
+          state.count += n
+      }
+  }
+  ```
+
+  ```js
+  this.$store.commit('increment',100)
+  ```
+
+- #### 大多情况下，`payload`应该是一个对象，这样可以包含多个字段，并且记录的mutation会更易读。
+
+  ```js
+  //......
+  mutations:{
+      increment(state,payload){
+          state.count += payload.amount
+      }
+  }
+  ```
+
+  ```
+  this.$store.commit('increment',{
+      amount: 100
+  })
+  ```
+
+- #### 对象风格的提交
+  - 提交mutation的另一种方式是直接使用包含 `type` 属性的对象
+  ```js
+  this.$store.commit({
+        type:'increment',
+        amount:100
+  })
+  ```
+  - 当使用对象风格的提交方式时,整个对象都将作为载荷提交给mutation函数,因此handler可以保持不变
+
+  ```js
+  //......
+  mutations:{
+      increment(state,payload){
+          state.count += payload.amount
+      }
+  }
+  ```
+## `Mutation`需要遵守`vue`的响应规则
+  `vuex`的`store`中的数据是响应式的,当我们变更状态时,监视状态的`vue`组件会自动更新,这就意味着`vuex`中的`mutation`也需要遵守一些规定
+
+   - **最好提前在store中初始化好所有所需属性**
+   - **当需要在对象上添加新属性时,可以如下方法**
+        1. 使用`vue.set(obj,'newProp','新属性的值')`
+        2. 或者替换使用展开运算符替换obj
 
 ```js
-const store = new vuex.store({
-    state:{
-        count:1
-    },
-    mutations:{
-        increment(state){
-            state++
-        }
-    }
-})
+ state.obj={ ...state.obj,newProp:'新属性的值' }
 ```
+
+
+
+## 使用常量替代 `Mutation` 事件类型
+
+```js
+//mutation-types.js
+export const INCREMENT = 'INCREMENT';
+```
+
+```js
+//store.js
+import { INCREMENT } from './mutation-types.js';
+
+const store = new vuex.Store({
+    state: {...},
+    mutations: {
+    	//使用ES2015风格的计算属性命名来使用一个常量作为函数名
+        [INCREMENT](state){
+            //mutate state
+        }
+   }
+})
+
+```
+
+
+
+## Mutation 必须是同步函数
+
+- #### 一条重要原则就是 `mutation` 必须是同步函数
+
+  - 异步的`mutation`会导致`devtools`无法追踪到回调函数中的状态变化
+
+
+
+## 组件中提交Mutation
+
+​	在组件中使用  `this.$store.commit('INCREMENT')` 提交`mutation`  ,或者使用 `mapMutations`辅助函数,将组件中的`methods` 映射为`store.commit` 调用(需要在根节点注入` store `)
+
+```js
+import { mapMutations } from 'vuex';
+
+export defalut {
+    //....
+    methods: {
+        ...mapMutations([
+            'increment', //将this.increment()映射为 this.$store.commit('increment')
+            //mapMutations也支持载荷
+            'incrementBy',
+            //this.increment(amount)映射为this.$store.commit('increment',amount)
+        ])
+        //或者
+            ...mapMutations({
+                add: 'increment'//将this.add()映射为this.$store.commit('increment')
+            })
+    }
+}
+```
+
+
+
+# Action
+
+- Action 类似 mutation , 不同之处在于
+  1. Action 提交的是 mutation 而不是, 直接变更状态
+  2. Action 可以包含任意的异步操作
+
+- 注册一个简单的Action
+
+  ```js
+  const store = new vuex.Store({
+      state: {
+          //...
+      },
+      mutations:{
+          increment(state){
+              state.count++
+          }
+      },
+      actions:{
+          incrememt(context){
+              context.commit('increment')
+          }
+      }
+  })
+  ```
+
+  
+
+- Action 函数接受一个与store具有相同属性和方法的context对象, 因此你可以通过调用**`context.commit`**提交mutation, 或者调用 **`context.state`** 获取state, 或者调用**`context.getters`** 获取getters
+
+- 实践中,通常使用ES2015的结构赋值,来简化代码
+
+  ```js
+  //...
+  actions: {
+      increment({ commit }){
+          commit('increment')
+      }
+  }
+  ```
+
+  
+
+## 分发Action
+
+- Action 通过 `this.$store.dispatch` 触发:
+
+  ```js
+  this.$store.dispatch('increment')
+  ```
+
+- Action 内可以进行异步操作:
+
+  ```js
+  actions:{
+      increment({ commit }){
+          setTimeout(() => {
+              commit('increment')
+          },1000)
+      }   
+  }
+  ```
+
+- Action 支持载荷方式和对象方式进行分发
+
+  ```js
+  //载荷形式分发
+  this.$store.dispatch('increment',{
+      count: 100
+  })
+  //对象形式分发
+  this.$store.dispatch({
+      type:'increment'
+  })
+  ```
+
+  
+
+## 组件中分发Action
+
+​	可以在组件中 直接使用`this.$store.dispatch('...')` 分发Action, 也可以使用 `mapActions` 赋值函数将组件的methods映射为`store.dispatch`调用
+
+```js
+import { mapActions } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    ...mapActions([
+         // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+      'increment',
+
+      // `mapActions` 也支持载荷：
+      // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+      'incrementBy'
+
+    ]),
+    ...mapActions({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    })
+  }
+}
+```
+
+
+
+## 组合Action
+
+Action 通常是异步的, 如何知道action什么时候结束,如何组合多个action,进行复杂的流程控制.
+
+- ##### 首先,`store.dispatch` 可以处理被触发的action的处理函数返回的Promise,并且返回Promise
+
+  ```js
+  actions: {
+      actionA({ commit }){
+          return new Promise((resolve,reject) => {
+              setTimeout(() => {
+                  commit('increment')
+                  resolve()
+              },2000,'完成操作')
+          })
+      }
+  }
+  ```
+
+  ```js
+  store.dispatch('actionA').then(() => {
+      // do something
+  })
+  ```
+
+- ##### 在另一个action里使用
+
+  ```js
+  actions: {
+      actionB({ commit, dispatch }){
+          dispatch('actionA').then(() => {
+              commit('xxxx')
+          })
+      }
+  }
+  ```
+
+- ##### 如果使用`async/awiat` 可以如下组合
+
+  ```js
+  actions: {
+      //假设getData,getOtherData返回promise,例如axios
+      async actionA({ commit }){
+          const { data } = await getData()
+          commit('setData', data)
+      },
+          async actionB({ dispatch, commit }){
+              await dispatch('actionA')
+              const { data } = await getOtherData
+              commit('setOtherData', data)
+          }
+  }
+  ```
+
+
+
+# Module
+
+由于使用单一状态
 
