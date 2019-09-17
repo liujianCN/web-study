@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Document</title>
+</head>
+<script>
+ /* window.onload = function () {
+    //变量定义
+    var msg = 'mvvm';
+    //操作dom
+    var dom = document.querySelector('#app');
+    var domH = document.querySelector('h3');
+    var domInput = document.querySelector('input');
+    domH.innerHTML = msg;
+    domInput.value = msg;
+    domInput.addEventListener('input', () => {
+      msg = domInput.value;
+      domH.innerHTML = msg;
+    })
+  }
+  */
+</script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+  window.onload=function(){
+    const vm = new Vue({
+      el:'#app',
+      data:{
+        msg:'mvvm'
+      }
+    })
+  }
+</script>
+<body>
+  <!-- view -->
+  <!-- <div id="app"> -->
+    <!-- <h3></h3> -->
+    <!-- <input type="text"> -->
+  <!-- </div> -->
+
+  <!-- 引入vue -->
+  <div id="app">
+    <h3>{{msg}}</h3>
+    <input type="text" v-model="msg">
+  </div>
+</body>
+
+</html>
