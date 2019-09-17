@@ -1,6 +1,6 @@
 # `vue`  基础
 
-##  MVVM
+##  1，MVVM
 
 前端的几个发展阶段
 
@@ -36,7 +36,7 @@
 
   - 第二阶段，由于原生API不好用，还要考虑浏览器兼容性，jQuery横空出世，以简洁的API迅速俘获了前端开发者的芳心：
 
-  ```
+  ```js
   $('#name').text('Homer').css('color', 'red');
   ```
 
@@ -138,9 +138,24 @@
   </html>
   ```
 
-  
 
-## vue
+## 2，vue简介
+
+- Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架
+  - 渐进式框架：在使用和学习式方式简单，学习成本较低，随着深入学习根据需求进行功能扩
+    展
+  - Vue 的核心库只关注视图层，不仅易于上手，还便于与第三方库或既有项目整合
+  - Vue借鉴React和Angular的部分代码设计，并提高了易用性和轻量化
+
+
+
+## 3，vue在页面使用
+
+- vue并不适合直接使用 页面方式进行语法定义；
+- 页面使用方式只是vue为了让开发者在学习语法时可以快速掌握；
+- 获取vue的核心语法库
+  - 通过地址 https://cdn.jsdelivr.net/npm/vue/dist/vue.js 下载vue核心语法包
+  - 使用 npm 进行Vue语法库的下载 `npm install vue`
 
 - 页面引入vue的核心库之后，会在全局对象window下添加一个Vue构造函数
 
@@ -157,3 +172,132 @@
   ```
 
   ![]()
+
+## 4，vue全局配置
+
+- 在vue项目运行启动前，对vue的运行环境进行相关功能设置
+  - 开启关闭调试工具，关闭开启控制台日志和警告，关闭开启调试工具……
+  - 所有的Vue全局环境设置依赖于Vue的全局配置对象 `Vue.config`
+
+```js
+// 取消 Vue 所有的日志与警告 , 取值类型：boolean 默认值：false
+Vue.config.silent = true;
+//配置是否允许 vue-devtools 检查代码 , 取值类型：boolean
+//开发版本默认为 true，生产版本默认为 false。生产版本设为 true 可以启用检查。
+Vue.config.devtools = true
+// 设置为 false 以阻止 vue 在启动时生成生产提示 , 取值类型：boolean 默认值：true
+Vue.config.productionTip = false;
+```
+
+## 5，基本交互
+
+### 5.1 差值表达式
+
+- 语法：`Mustache语法` `{{ }}` 
+- 功能：只提供语法，不提供功能，具体功能需要框架提供
+- 特性：vue中响应数据
+  - 通过插值表达式所绑定的数据的标签，在数据变化时，会重新渲染加载
+  - 差值表达式只能对vue的数据进行响应
+- 对于vue框架来说：只能使用在HTML标签当中，不能使用在其他地方
+- 对于vue框架来说：只能使用vue中**定义的变量**或简单的 **js表达式** 或 **js内置对象**
+
+```html
+<标签>{{ vue中的数据 | js表达式 | js内置对象 }}</标签>
+```
+
+> 注意：当vue中的数据仓库中定义的变量名称和js内置对象名称一样时，优先数据仓库中的变量
+
+```vue
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            msg:"测试数据",//"测试数据"
+            num:100,//100
+            flag:true,//true
+            arr:[1,2,3,4],//[1,2,3,4]
+            user:{
+            name:"tom",
+            age:23
+            },
+            arg1:null,//''
+            arg2:undefined,//''
+            imgDom:new Image(),//'[object HTMLImageElement]'
+            day:new Date(),//Wed Sep 18 2019 00:01:02 GMT+0800 (中国标准时间)
+            // 不要使用JS内置关键字
+            // Math:"vue示例自定义的math"
+            htmlStr:"<h3>h3标签</h3>",//<h3>h3标签</h3>
+            str:"aaaa\nbbbbb\n\tccccc"//aaaa bbbb cccc
+        }
+    })
+</script>
+<!--
+vue的插值表达式可以直接，以JS语法调用 匿名变量
+-->
+<p>number匿名变量：{{ 100 }}</p>
+<p>string匿名变量：{{ "字符串" }}</p>
+<p>boolean匿名变量：{{ true }}</p>
+<p>array匿名变量：{{ [1,2,3,4,5] }}</p>
+<p>object匿名变量：{{ {a:1,b:2} }}</p>
+<p>Date匿名变量：{{ new Date() }}</p>
+<p>对象：{{ user }}</p>
+<p>对象中的属性：{{ user.name }}</p>
+<p>数组元素：{{ arr[0] }}</p>
+<!--
+插值表达式可取值：JS表达式
++ 在插值表达式的定义范围内，可以直接进行简单的 js 运算
+- 四则运算
+- 逻辑运算
+- 比较运算
+- 赋值运算
+- 三目运算
+* 总结：插值表达式在vue环境下运算时保留原变量类型，当运算结束后向页面输出时转
+换为字符串类型
+-->
+<p>四则：{{ 1+1 }}</p>
+<p>四则：{{ num+1 }}</p>
+<p>逻辑：{{ flag&&false }}</p>
+<p>比较:{{ num<=99 }}</p>
+<p>三目运算：{{ flag?"真":"假" }}</p>
+
+<!-- 赋值语法会修改对应变量 -->
+<p>赋值运算：{{ msg='新字符串' }}</p>
+
+<!--
+JS内置对象 (Math)
+-->
+<p>Math:{{ Math }}</p>
+<p>Math:{{ Math.pow(2,2) }}</p>
+<p>Math:{{ Math.random() }}</p>
+<p>Math:{{ Math.PI }}</p>
+
+```
+
+- 对于不同类型的数据，为了保证输出结果的正确性，vue对变量调用了自定义的`toString`方法
+
+```js
+var _toString = Object.protoType.toString;
+function isPlainObj(obj){
+    return _toString.call(obj) === '[object Object]'
+}
+function toString(val){
+    return val == null?
+        ''://null或者undefined
+        //数组或者纯对象
+        Array.isArray(val) || (isPlainObj(val) && val.toString === _toString)?
+        	JSON.stringfy(val,null,2)://将val序列化
+   				String(val)//强制转换
+}
+```
+
+- 值表达式 底层调用的 是 DOM 对象的 textContent 属性 进行值得写入操作
+  - html格式字符串将不被解析
+  - js 转义符将不被识别
+
+```markdown
++ 插值表达式实际上是通过调用 textContent 方式向标签中定义数据变量
++ textContent 和 innerText 在标签格式字符串处理上效果一样
+- innerText 当文本中出现 \n 会将 \n 转化为<br> : 文本解析属性
+- textContent 当文本中出现 \n 直接保留特性向页面输出
+```
+
