@@ -301,3 +301,234 @@ function toString(val){
 - textContent 当文本中出现 \n 直接保留特性向页面输出
 ```
 
+### 5.2 基本指令
+
+- 为开发者 提供 在页面中进行 特殊功能的属性描述方法
+
+  - 语法：Vue指令以 `v-名称` 结构定义
+  - 位置：**指令只能用在HTML容器的标签属性上**，`<标签 v-指令=""><标签/>`
+  - 实现：指令实际上是对js方法的封装，页面上定义的指令，只是对方法的调用
+  - 功能：通过指令可以实现HTML标签写入，循环，判断，属性和时间的绑定。。。
+
+- 完整语法
+
+  - `v－指令名［：参数］［．修饰符］［＝取值］`
+  - `v－指令名［：参数］［．修饰符］［＝＂取值＂］`
+    - 参数：对当前指令操作范围进行限制
+    - 修饰符：限制指令功能的触发条件
+
+  
+
+  > Tips：
+  >
+  > 1、普通指令取值范围和插值表达式基本一致，可取Vue数据仓库中定义的变量，可取匿名变量，可取JS内置对象、可进行简单的四则运算；
+  >
+  > 2、对于特殊指令`v-on`只能绑定Vue方法仓库中的自定义方法，或绑定简单JS表达式
+
+  
+
+#### 1、v-text
+
+- 取值：`string`
+- 功能：更新元素的 `textContent`。如果要更新部分的 `textContent` ，需要使用 `{{ Mustache }}` 插值。
+- 示例：`<span v-text="msg"></span>`
+
+```html
+<body>
+    <div id="app">
+        <!-- v-text 等效于 插值表达式 -->
+        <p>msg:{{ msg }}</p>
+        <p v-text=" 'msg:'+msg "></p>
+        <!-- 
+            HTML 规范中并不强制要求 标签属性取值一定要定义 引号
+        -->
+        <p v-text=msg ></p>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            msg:"变量msg"
+        }
+    })
+</script>
+```
+
+#### 2、v-html
+
+- 取值：`string`
+- 功能：更新元素的 `innerHTML` 
+- 示例：`<div v-html="html"></div>`
+
+```html
+<body>
+    <div id="app">
+        <!-- v-html -->
+        <p>{{ htmlStr }}</p>
+        <p v-text="htmlStr"></p>
+        <p v-html="htmlStr"></p>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            htmlStr:"<h3>html格式字符串</h3>"
+        }
+    })
+</script>
+```
+
+#### 3、v-pre
+
+- 取值：**不需要表达式**，该指令为boolean类型属性
+  - 写表示 true（启用功能） 不写表示 false（不启用功能）
+- 功能：跳过这个元素和它的子元素的编译过程。可以用来显示原始 Mustache 标签。跳过大量没有指令的节点会加快编译。
+- 示例：`<span v-pre>{{ 该语法会直接显示在页面 }}</span>`
+
+```html
+<body>
+    <div id="app">
+        <!-- 
+            v-pre 指令不是html的pre标签功能
+            v-pre指令用于限定被当前属性绑定的标签和标签内部的vue语法不被执行 
+        -->
+        <!-- <pre>adsdasd
+            asdasdasd
+        </pre> -->
+        <p><span v-pre>{{ msg }}是vue插值表达式取值语法，msg值为：</span>{{ msg }}</p>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            msg:"变量msg"
+        }
+    })
+</script>
+```
+
+#### 4、v-once
+
+- 取值：**不需要表达式**，该指令为boolean类型属性
+  - 写表示 true（启用功能） 不写表示 false（不启用功能）
+- 功能：对当前元素和内部元素vue功能执行**一次**，程序执行过程不在对该元素范围内的vue功能进行重新执行
+- 示例：`<span v-once>该区域vue功能只在初始化时执行一次 {{msg}}</span>`
+
+```html
+<body>
+    <div id="app">
+        <p>{{ msg }}</p>
+        <p v-pre>{{ msg }}</p>
+        <!-- 
+            v-once修饰的标签内部vue语法可以正常执行一次
+            当第一次执行完成后，内部的vue所有语法彻底失效
+        -->
+        <p v-once>{{ msg }}</p>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            msg:"变量msg"
+        }
+    })
+</script>
+```
+
+#### 5、v-cloak
+
+- 取值：**不需要表达式**，该指令为boolean类型属性 (==vue没有为该指令增加任何功能==)
+
+- 官方解释：该指令可以在vue示例未被初始化前，隐藏vue相关构成模板
+
+- 功能：实现在vue功能构建完成前，隐藏浏览上vue语法表达式，**该指令本身不具有特殊功能，需配合css样式实现效果**
+
+- 示例：
+
+  ```css
+  [v-cloak] {
+    display: none;
+  }
+  ```
+
+  ```html
+  <div v-cloak>
+    {{ message }}
+  </div>
+  ```
+
+> Tips：在vue模板编译之前，隐藏vue表达式，未完成构建时，无法使用vue的语法，v-cloak指令功能主要利用了 **指令特性** + css 样式实现，因此所有的vue指令都可以实现该功能
+
+#### 6、v-on
+- 缩写：@
+
+- 语法：
+
+  ```html
+  <button v-on[：参数][：修饰符]>点击</button>
+  <button @[：参数][：修饰符]>点击</button>
+  ```
+
+- 取值：Function | Inline Statement（行内表达式） | Object
+
+- 参数：event
+
+- **修饰符**：
+
+  - `.stop` - 调用 `event.stopPropagation()`。
+  - `.prevent` - 调用 `event.preventDefault()`。
+  - `.capture` - 添加事件侦听器时使用 capture 模式。
+  - `.self` - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
+  - `.{keyCode | keyAlias}` - 只当事件是从特定键触发时才触发回调。
+  - `.native` - 监听组件根元素的原生事件。
+  - `.once` - 只触发一次回调。
+  - `.left` - (2.2.0) 只当点击鼠标左键时触发。
+  - `.right` - (2.2.0) 只当点击鼠标右键时触发。
+  - `.middle` - (2.2.0) 只当点击鼠标中键时触发。
+  - `.passive` - (2.3.0) 以 `{ passive: true }` 模式添加侦听器
+
+  ```html
+  <script>
+  	var btn = document.getElementById('btn');
+    //为dom增加事件监听
+    // eventName事件名
+    // 事件监听的回调函数
+    // 事件的行为描述：{
+    //		capture:false,捕获阶段执行，默认
+    //		passive:false,触摸事件和滚动事件优化
+    //		once:false 事件只执行一次
+    //	}
+    function show(){
+      console.log('show')
+    }
+    function hide(){
+      console.log('hide')
+    }
+    btn.addEventListener('click',function(){
+      console.log('click1')
+    })
+     btn.addEventListener('click',function(){
+      console.log('click2')
+    })
+     btn.addEventListener('click',function(){
+      console.log('click3')
+    })
+  </script>
+  <body>
+    <!-- 为html标签的事件属性增加处理函数,只能设置一个 -->
+  	<input type="button" value="事件绑定" onclick="show()"/>
+    
+    <!-- 为html标签增加事件监听 -->
+  	<input id="btn" type="button" value="事件绑定"/>
+    
+     <!-- 行内表达式，事件绑定的行内表达式一定是一个赋值表达式 -->
+      <p>msg：{{ msg }}</p>
+      <input type="button" value="修改变量msg值" @click="setMsg()">
+      <input type="button" value="修改变量msg值" @click=" msg='新值' ">
+  </body>
+  ```
+
