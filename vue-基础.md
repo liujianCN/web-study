@@ -477,20 +477,6 @@ function toString(val){
 
 - 参数：event
 
-- **修饰符**：
-
-  - `.stop` - 调用 `event.stopPropagation()`。
-  - `.prevent` - 调用 `event.preventDefault()`。
-  - `.capture` - 添加事件侦听器时使用 capture 模式。
-  - `.self` - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
-  - `.{keyCode | keyAlias}` - 只当事件是从特定键触发时才触发回调。
-  - `.native` - 监听组件根元素的原生事件。
-  - `.once` - 只触发一次回调。
-  - `.left` - (2.2.0) 只当点击鼠标左键时触发。
-  - `.right` - (2.2.0) 只当点击鼠标右键时触发。
-  - `.middle` - (2.2.0) 只当点击鼠标中键时触发。
-  - `.passive` - (2.3.0) 以 `{ passive: true }` 模式添加侦听器
-
   ```html
   <script>
   	var btn = document.getElementById('btn');
@@ -530,5 +516,272 @@ function toString(val){
       <input type="button" value="修改变量msg值" @click="setMsg()">
       <input type="button" value="修改变量msg值" @click=" msg='新值' ">
   </body>
+  
   ```
 
+  ```html
+   <hr>
+      <!-- 
+          js的 形参 和 实参
+              形参：就是js方法定义时吗，描述的该方法所要接收的参数的 参数名称
+              实参：js方法执行时传入的固定参数
+      -->
+      <div id="app" >
+          <!-- 
+              vue事件绑定时的形参传递,执行方法是可以根据需求直接传入实参值
+                  1、vue事件绑定传入的方法参数，可以是符合JS语法习惯的相关值和表达式
+                  2、vue的事件绑定可以直接以 当前示例数据仓库变量作为参数
+          -->
+          <input type="button" value="输出info变量-btn1" @click="printInfo( 'btn1' )">
+          <input type="button" value="输出info变量-btn2" @click="printInfo( 'btn2' )">
+          <input type="button" value="输出info变量-btn3" @click="printInfo( 'btn3' )">
+          <hr>
+          <input type="button" value="输出Math对象" @click="printArgs( Math )">
+          <input type="button" value="每次执行数据一个随机数据" @click="printArgs( Math.random() )">
+          <hr>
+          <input type="button" value="输出info变量" @click="printArgs( info )">
+          <input type="button" value="输出msg变量" @click="printArgs( msg )">
+          <hr>
+          <!-- vue示例容器中的标签，绑定的事件如果传入this，此时的this恒定指向与 window 对象 -->
+          <input type="button" value="传入形参this" @click="printThis( this )">
+          <hr>
+          <!-- 
+              vue事件默认从vue示例的数据仓库和方法中取对应的变量
+              vue将常用的事件源对象 重新定义为 $event 等同于 普通 js中 event事件源
+          -->
+          <input type="text" @input=" printValue( $event ) ">
+          <input type="text" @input=" printValue( $event.target ) ">
+          <input type="text" @input=" printValue( $event.target.value,'ssss' ) ">
+          <hr>
+          <!-- 
+              vue的事件绑定 可以不用定义 事件名称后的 ()
+              ==> 这种事件绑定方式，是vue提供给组件化数据传递使用的事件绑定方式
+          -->
+          <input type="button" value="事件绑定" @click="printMsg()">
+          <input type="button" value="事件绑定" @click="printMsg">
+      </div>
+  <script>
+      new Vue({
+          el: "#app",
+          data:{
+              info:"info默认值",
+              msg:"msg默认值"
+          },
+          methods:{
+              printMsg(){
+                  console.log("事件触发")
+              },
+              printInfo(arg){
+                  console.log(arg,":",this.info)
+              },
+              printArgs(arg){
+                  // console.log(Math);
+                  // console.log(this.info);
+                  console.log(arg);
+              },
+              printThis(arg){
+                  console.log(arg);
+              },
+              printValue(arg,arg1){
+                  console.log("用户输入值：",arg,arg1);
+              }
+          }
+      })
+  </script>
+  ```
+
+
+
+- **修饰符**： **事件传递机制处理功能**
+
+- `.stop` - 调用 `event.stopPropagation()`。
+
+- `.prevent` - 调用 `event.preventDefault()`。
+
+- `.capture` - 添加事件侦听器时使用 capture 模式（事件捕获模式）
+
+- `.self` - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
+
+  **下述修饰符用于修饰事件出发的按键**
+
+- `.{keyCode-按键编码 | keyAlias-按键描述}` - 只当事件是从特定键触发时才触发回调。
+
+- `.left` - (2.2.0) 只当点击鼠标左键时触发 或者 键盘方向左键。
+
+- `.right` - (2.2.0) 只当点击鼠标右键时触发 或者 键盘方向右键
+
+- `.up `键盘方向上键
+
+- `.down` 键盘方向下键
+
+- `.middle` - (2.2.0) 只当点击鼠标中键时触发。
+
+  **一次事件修饰符**
+
+- `.once` - 只触发一次回调。
+
+- ==`.native` - 监听组件根元素的原生事件。=> 应用于组件化技术的 ？？？？==
+
+- `.passive` - (2.3.0) 以 `{ passive: true }` 模式添加侦听器（启用默认事件功能）
+
+  > Tips：addEventListener() 事件绑定中的 passive 属性和 preventDefault 功能的关系
+  >
+  >  元素事件每次被触发，浏览器都会去查询被执行行为是否有preventDefault阻止该次事件的默认动作。
+  >
+  >  加上**passive就是为了告诉浏览器，不用查询了，执行 方法中没用preventDefault阻止默认动作。**
+  >
+  >  这里一般用在滚动监听，@scoll，@touchmove 中。因为滚动监听过程中，移动每个像素都会产生一次事件，每次都使用都进行查询prevent会使滑动卡顿。通过passive将内核线程查询跳过，可以大大提升滑动的流畅度。
+  >
+  > **注：Vue时间绑定时，passive和prevent冲突，不能同时绑定在一个监听器上。**
+
+#### 7、v-show
+
+- 取值：`any`
+- 功能：根据表达式的boolean结果，**切换元素的 display 属性，控制元素显示隐藏**
+- 示例：`<p v-show=" flag "></p>`
+
+```
+<div id="app">
+    <h1 v-show=" true ">h1标签1</h1>
+    <h1 v-show=" false ">h2标签2</h1>
+    <h1 v-show=" '' ">h2标签3</h1>
+    <h1 v-show=" 'asdasda' ">h2标签4</h1>
+    <h1 v-show=" 0 ">h2标签5</h1>
+    <h1 v-show=" 1 ">h2标签6</h1>
+    <h1 v-show=" [] ">h2标签7</h1>
+    <h1 v-show=" {} ">h2标签8</h1>
+    <hr>
+    <h1 v-show=" flag ">请登录</h1>
+    <p v-show=" !flag ">当前用户tom,账户余额300</p>
+</div>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            flag:true,
+            num:10
+        }
+    })
+</script>
+```
+
+
+
+#### 8、v-if、v-else-if、v-else
+
+- 取值：
+
+  - v-if：`any`
+  - v-else-if：`any`
+  - v-else：**不需要表达式**，该指令为boolean类型属性
+
+- 用法：根据表达式的boolean结果，**执行元素的创建（createElement）和删除操作（removeElement）**
+
+- 示例：
+
+  ```
+  <div v-if="type === 'A'">A</div>
+  <div v-else-if="type === 'B'">B</div>
+  <div v-else>Not A/B/C</div>
+  ```
+
+  - `v-else` 指令的上一个元素 必须使用了 `v-if` 或者 `v-else-if`
+  - `v-else-if` 指令的上一个元素 必须使用了 `v-if`
+
+```
+<div id="app">
+    <h1 v-if=" flag ">请登录</h1>
+    <p v-if=" !flag ">当前用户tom,账户余额300</p>
+    <input type="button" value="显示隐藏" @click=" flag=!flag ">
+    <hr>
+    <p v-if="num<10">小于10</p>
+    <p v-else-if="num==10">等于10</p>
+    <p v-else>大于10</p>
+    <hr>
+    <p v-if="num<10">小于10</p>
+    <p v-if="num==10">等于10</p>
+    <p v-if="num>10">大于10</p>
+    <hr>
+    <p v-show="num<10">小于10</p>
+    <p v-show="num==10">等于10</p>
+    <p v-show="num>10">大于10</p>
+    <input type="button" value="+" @click=" num = num+1 ">
+    <input type="button" value="-" @click=" num = num-1 ">
+</div>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            flag:true,
+            num:10
+        }
+    })
+</script>
+```
+
+
+
+#### 9、v-for
+
+- 取值：Array | Object  | Number | String
+- 功能：循环渲染元素或者模板
+  - 具有vue实例数据仓库的读取特性
+  - 只能在当前循环标签的属性和内部进行使用
+  - 在相同容器和示例范围内，循环临时变量优先级高于vue实例数据仓库的变量
+
+```
+  <!--
+  	1、items 类型为 Array
+  		-> item 为数组循环时当前循环到的数组元素  [1,2,3,4]
+  	2、items 类型为 Object
+  		-> item 为对象循环时当前循环到的键值对的 值
+  	3、items 类型为 number
+  		-> item 数值从1开始的累加值
+  	4、items 类型为 string
+  		-> item 从字符串下标0开始的每次循环的 字符
+  -->
+  <div v-for="item in items">
+    {{ item.text }}
+  </div>
+  <!--
+  	1、items 类型为 Array
+  		-> item 为数组循环式当前循环到的数组元素
+  		-> arg2 表示当前数组循环到的下标值（索引）
+  		-> arg3 只在循环对象时有效
+  	2、items 类型为 Object
+  		-> item 为对象循环时当前循环到的键值对的 值
+  		-> arg2 为对象循环时当前循环到的键值对的 键
+  		-> arg3 vue为对象循环提供的计数器（从 0 ）
+  	3、items 类型为 number
+  		-> item 数值从1开始的累加值
+  		-> arg2 循环次数的统计 （从 0 ）
+  	4、items 类型为 string
+  		-> item 从字符串下标0开始的每次循环的 字符
+  		-> arg2 字符下标（索引）
+  -->
+  <div v-for="(item [,arg2] [,arg3]) in items">
+    {{ item.text }}
+  </div>
+```
+
+  - 取值表达式：也可以为数组索引指定别名 (或者用于对象的键)：
+
+  ```
+  <div v-for="(item, index) in items"></div>
+  <div v-for="(val, key) in object"></div>
+  <div v-for="(val, name, index) in object"></div>
+  ```
+
+- **辅助渲染**：`v-for` 指令为提高性能采用部分标签渲染操作（**只针对与需要添加和删除的标签进行渲染操作**）
+
+  - `v-for` 默认不改变整体，而是**重复替换使用已有元素**，该方式会导致页面排序功能展示出现问题。
+
+  - 为迫使其`v-for`重新排序元素，需要提供一个 `key` 的特殊属性，为每个元素提供唯一key值**不能使用下标**
+
+```html
+  <div v-for="item in items" :key="item.id">
+    {{ item.text }}
+  </div>
+```
+
+​    
