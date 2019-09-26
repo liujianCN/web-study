@@ -13,7 +13,7 @@ module.exports = {
   devServer: {
     contentBase: resolve('dev'),
     open: true,
-    port: 3001,
+    port: 10086,
     //hot: true,
     overlay: true
   },
