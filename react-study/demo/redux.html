@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn"">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <button onclick="add('待办事项222')">添加待办</button>
+  <script src="../lib/redux.js"></script>
+  <script>
+    const { createStore } = Redux;
+    const initialState = [
+      {
+        title: '待办事项1'
+      }
+    ]
+    const todoApp = (state = initialState, action) => {
+      switch (action.type) {
+        case 'ADD_TODO':
+          return [
+            ...state,
+            action.text
+          ];
+        default:
+          return state;
+      }
+    }
+    const store = createStore(todoApp);
+    console.log(store.getState());
+    const add = text => store.dispatch({type:'ADD_TODO',text});
+    const s = () => console.log(store.getState());
+    const subscribe = store.subscribe( s )
+  </script>
+</body>
+
+</html>
