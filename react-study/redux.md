@@ -629,10 +629,135 @@ const mapState = (state, ownProps) => {
    connect(mapState,null)(Counter)
    ```
 
-2. 指定mapDispatchToProps时，可以将Action Creator作为props传入组件中
+2. 指定mapDispatchToProps时，可以将Action Creator作为props传入组件中。
+
+   1. 其比1更具说明性，比直接dispatch一个对象，doSomething更具有说明性
+   2. 当传入子组件时，更加方便简洁。
 
    **2种形式的mapDispatchToProps**：
 
    1. function形式：更具灵活性，可以访问dispatch，和ownProps
    2. 对象形式：更具说明性，更易使用。
+
+   > 无特殊自定义的action派发，请使用对象方式
+
+
+
+- #### dispatch
+
+  mapDispatchToProps接收dispatch作为第一个参数
+
+  ```js
+  //直接派发一个action
+  const mapDispatchToProps = dispatch => {
+    return {
+      increment: () => dispatch({ type: 'INCREMENT' }),
+      decrement: () => dispatch({ type: 'DECREMENT' }),
+      reset: () => dispatch({ type: 'RESET' })
+    }
+  }
+  //或者，派发Action Creator 返回的结果
+  const mapDispatchToProps = dispatch => {
+    return {
+      onClick: event => dispatch(trackClick(event)),
+      onReceiveImpressions: (...impressions) =>
+        dispatch(trackImpressions(impressions))
+    }
+  }
+  ```
+
+- #### ownProps（可选）
+
+  当派发的action需要依赖ownProps时，将其作为第二个参数，传给mapDispatchToProps，同样的，mapDispatchToProps也会在props更改时重新调用，这意味着，你可以在props更改时绑定，而不是在组件重新渲染时将ownProps传入
+
+  ```jsx
+  // binds on component re-rendering
+  <button onClick={() => this.props.toggleTodo(this.props.todoId)} />
+  
+  // binds on `props` change
+  const mapDispatchToProps = (dispatch, ownProps) => {
+    toggleTodo: () => dispatch(toggleTodo(ownProps.todoId))
+  }
+  ```
+
+- #### 返回值
+
+  mapDispatchToProps返回一个普通js对象
+
+  - 对象的每一个键都将作为prop传入组件，值通常时派发action的函数
+  - 如果dispatch的时Action Creator ，则约定，键名使用Action Creator 的名字
+
+  ```js
+  const increment = () => ({ type: 'INCREMENT' });
+  const decrement = () => ({ type: 'DECREMENT' });
+  
+  const mapDispatch = dispatch => ({
+      increment: () => dispatch(increment()),
+      decrement: () => dispatch(decrement())
+  })
+  ```
+
+  mapDispatchToProps返回的对象的键名将作为prop传入组件中，可以直接调用
+
+  ```jsx
+  function Counter({ count, increment, decrement, reset }) {
+    return (
+      <div>
+        <button onClick={decrement}>-</button>
+        <span>{count}</span>
+        <button onClick={increment}>+</button>
+      </div>
+    )
+  }
+  ```
+
+- #### 使用bindActionCreators定义mapDispatch
+
+  手动包装mapDispatch太繁琐，redux提供bindActionCreators简化操作，它接受两个参数，
+
+  1. 一个function（Action Creator）或者一个对象（键名为每一个Action Creator）
+  2. dispatch
+
+  ```jsx
+  import { bindActionCreators } from 'redux'
+  
+  const increment = () => ({ type: 'INCREMENT' })
+  const decrement = () => ({ type: 'DECREMENT' })
+  
+  const mapDispatch = dispatch => {
+    return bindActionCreators({ increment, decrement, reset }, dispatch)
+  }
+  
+  connect(
+    null,
+    mapDispatch
+  )(Counter)
+  
+  
+  ```
+
+
+- #### 将mapDispatchToProps定义为对象
+
+  > 无特殊需求时，始终推荐，将mapDispatchToProps定义为对象
+
+  ```jsx
+  import {increment, decrement, reset} from "./counterActions";
+  
+  const actionCreators = {
+    increment,
+    decrement,
+    reset
+  }
+  
+  export default connect(mapState, actionCreators)(Counter);
+  
+  //或者
+  export default connect(
+    mapState,
+    { increment, decrement, reset }
+  )(Counter);
+  ```
+
+
 
