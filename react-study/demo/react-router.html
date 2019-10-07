@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- <script src="../lib/react.js" crossorigin></script> -->
+  <script src="https://cdn.bootcss.com/react/16.9.0/umd/react.development.js"></script>
+  <script src="https://cdn.bootcss.com/react-dom/16.9.0/umd/react-dom.development.js"></script>
+  <!-- <script src="../lib/react-dom.js" crossorigin></script> -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- <script src="../lib/react-router-dom.js"></script> -->
+  <script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="text/babel">
+  const { HashRouter, Switch, Route, Redirect,Link,withRouter, useHistory, useLocation, useParams, useRouteMatch } = ReactRouterDOM;
+    function One(props) {
+      //children 元素
+      console.log(props)
+      return <div>oneOOO</div>
+    }
+    function Two(props) {
+      // component
+      console.log(props)
+      return <div>twoTTT</div>
+    }
+    function Three(props) {
+      //render
+      console.log(props)
+      return <div>ThreeEEEE</div>
+    }
+    function Four(props) {
+      //children
+      console.log(props)
+      return <div>FourFFF</div>
+    }
+    function ListItemLink({ to, ...rest }) {
+      return (
+        <Route
+          path={to}
+          children={({ match }) => (
+            <li className={match ? "active" : ""}>
+              <Link to={to} {...rest}>{to}</Link>
+            </li>
+          )}
+        />
+      )
+    }
+    //测试withRouter
+    function WithRouter(props) {
+      console.log(props);
+      return <div>WithRouter</div>
+    }
+    const WithRouterTest = withRouter(WithRouter)
+    class Location extends React.Component {
+      state = {
+        n:0
+      }
+      click = () => {
+        this.setState(state => {
+          console.log(state);
+          return {n:state.n + 1}
+        })
+      }
+      componentDidUpdate(prevProps) {
+        
+        const location = this.props.location === prevProps.location
+        const history = this.props.history.location === prevProps.history.location
+        // debugger;
+        // console.log(prevProps.location);
+        console.log(this.props);
+        //console.log(location);
+        console.log('-------->')
+        // console.log(prevProps.history);
+        //console.log(history);
+        // console.log(this.props.history);
+      }
+      render(){
+        return <div onClick={this.click}>
+        {this.state.n}
+        <WithRouterTest/>
+        </div>
+      }
+    }
+    //hooks测试
+    function UseHistory(params) {
+      const history = useHistory()
+      return <div onClick={()=>history.push('/one')}>useHistory</div>
+    }
+    function UseLocation(params) {
+      const [n,setN] = React.useState(0)
+      const location = useLocation();
+      React.useEffect(()=>{
+        console.log('不同的location');
+      },[location])
+      return (
+        <div>
+          <div>{n}</div>
+          <div onClick={()=>setN(n => n+1)}>UseLocation</div>
+        </div>
+      )
+    }
+    function UseParams(params) {
+      const p = useParams();
+      console.log(p);
+      return <div>useParams</div>
+    }
+    function UseRouteMatch(params) {
+      const match = useRouteMatch('/home/:id')
+      console.log('useRouteMatch');
+      console.log(match);
+      return <div>useRouteMatch</div>
+    }
+    function Hooks(params) {
+      return (
+        <div>
+          <UseHistory/>
+          <UseParams/>
+        </div>
+      )
+    }
+    function App() {
+      return (
+        <div>
+          <ul>
+            <li><Link to='/one'>one</Link></li>
+            <li><Link to='/two'>two</Link></li>
+            <li><Link to='/three'>three</Link></li>
+            <li><Link to='/four'>four</Link></li>
+            <li><Link to='/five'>five</Link></li>
+            <li><Link to='/hooks/lisi'>hooks</Link></li>
+            <ListItemLink to="/somewhere" />
+            <ListItemLink to="/somewhere-else" />
+          </ul>
+          <UseLocation/>
+          <UseRouteMatch/>
+          <Switch>
+            <Route path='/one'>
+              <One/>
+            </Route>
+            <Route path='/two' component={Two}/>
+            <Route path='/three' render={({location,history})=><Three location={location} history={history}/>}/>
+            <Route path='/four' children={ routeProps => <Four {...routeProps}/> }/>
+            <Route path='/hooks/:name' component={Hooks}/>
+          </Switch>
+            <Route path='/home/:id' component={Location}/>
+          
+        </div> 
+      )
+    }
+    ReactDOM.render(<HashRouter><App/></HashRouter>,document.getElementById('app'))
+  </script>
+</body>
+
+</html>

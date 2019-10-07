@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/dayjs"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/babe">
+    const { useState, useEffect,useMemo } = React;
+    const Time = () => {
+      const now = useMemo(() => dayjs(new Date()).unix(),[])
+      const endTime = useMemo(() => dayjs('2019-09-27').unix(),[])
+      const [ time, setTime ] = useState(now);
+      useEffect(() => {
+        const id = setInterval(() => {
+          setTime(n => n + 1)
+        }, 1000);
+      },[])
+      //相差的总秒数
+      let totalSeconds = endTime - time;
+      //console.log(endTime);
+      //console.log(time);
+          //天数
+      let days = Math.floor(totalSeconds / (60 * 60 * 24));
+      //取模（余数）
+      let modulo = totalSeconds % (60 * 60 * 24);
+      //小时数
+      let hours = Math.floor(modulo / (60 * 60));
+      modulo = modulo % (60 * 60);
+      //分钟
+      let minutes = Math.floor(modulo / 60);
+      //秒
+      let seconds = modulo % 60;
+
+      return <div>{days+'天'+hours+'时'+minutes+'分'+seconds+'秒'}</div>
+    }
+    ReactDOM.render(<Time/>,document.getElementById('app'))
+  </script>
+  <script type="text/babel">
+
+    function AutoFocus(props) {
+       return(
+        <input ref = {props.inputRef} />
+      )
+    } 
+
+
+    
+    class Input extends React.Component{
+      constructor(props){
+        super(props);
+        this.inputRef = React.createRef()
+      }
+
+      focus = () => {
+        return this.inputRef.current.value
+      }
+
+      render(){
+        return (
+          <input ref={this.inputRef} value="是的"/>
+        )
+      }
+    }
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+        // this.inputRef = null;
+        //this.bindInputRef = e => this.inputRef = e
+        this.inputRef = React.createRef()
+      }
+      //inputRef = React.createRef()
+      state = {
+        name: 'sara'
+      }
+      static defaultProps = {
+        age:16
+      }
+      handleClick = e => {
+        //console.log(this.state);
+        //console.log(e);
+
+        this.setState(state => ({name:'安静'+state.name}),()=>{console.log(this.state);})
+        //this.setState(state => ({name:'吵闹'+state.name}))
+        //console.log(this.state);
+        this.setState({
+          name:'吵闹'+this.state.name
+        })
+      }
+      
+      componentDidMount() {
+        console.log(this.inputRef);
+      }
+      
+      
+
+      render(){
+        console.log(this.state);
+        return (
+          <div>
+            <div onClick={this.handleClick}>{this.state.name}---{this.props.name} --- {this.props.age}</div>
+            {/*<input ref = {this.bindInputRef} />*/}
+           {/* <Input ref={this.bindInputRef}/> */}
+           
+           {/*
+            *<AutoFocus
+            inputRef={this.bindInputRef}
+           />          
+           */}
+           <AutoFocus
+            inputRef={this.inputRef}
+           />
+          </div>
+        )
+      }
+    };
+
+
+
+    function CustomTextInput(props) {
+  return (
+    <div ref={props.inputRef}>
+      <input />
+    </div>
+  );
+}
+
+class Parent extends React.Component {
+  componentDidMount() {
+    console.log(this.inputElement);
+  }
+  
+  render() {
+    return (
+      <CustomTextInput
+        inputRef={el => this.inputElement = el}
+      />
+    );
+  }
+}
+
+class FlavorForm extends React.Component {
+  constructor(props) {
+    super(props);
+    //默认值：椰子
+    this.state = {value: ['coconut','mango']};
+    this.sref = React.createRef()
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    //const value = Array.from(new Set([...this.state.value,e.target.value]))
+    // this.setState(state => ({value: [...state,e.target.value]}))
+    //this.setState({value});
+    console.log(this.sref.current.value);
+  }
+
+  render() {
+    return (
+        <label>
+          选择你喜欢的风味:
+          <select multiple={true} ref = {this.sref} onChange = {this.handleChange}>
+            <option value="grapefruit">葡萄柚</option>
+            <option value="lime">酸橙</option>
+            <option value="coconut">椰子</option>
+            <option value="mango">芒果</option>
+          </select>
+        </label>
+    );
+  }
+}
+    ReactDOM.render(<FlavorForm />,document.getElementById('app'))
+    // ReactDOM.render(<Parent name='linux'/>,document.getElementById('app'))
+  </script>
+</body>
+</html>
