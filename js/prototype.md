@@ -50,6 +50,10 @@ var person2 = new Person("Sophie", 29, "English Teacher");
    return lisi；
    ```
 
+> new 运算符的语言层面的定义和剖析：[new 运算符](<https://www.cnblogs.com/aaronjs/archive/2012/07/04/2575570.html>)
+
+
+
 构造函数创建对象存在的问题
 
 - person1.sayName和person2.sayName是内存中两块不同的空间，这是浪费。
@@ -363,6 +367,7 @@ function Son(name,age) {
   this.age = age
 };
 Son.prototype = new Father;
+Son.prototype.constructor = Son;
 Son.prototype.sayAge = function(){
   return this.age
 }
@@ -371,7 +376,9 @@ var p1 = new Son('mek',18);
 var p2 = new Son('hhz',20);
 ```
 
+在为subClass设置原型时实例化superClass时，会在subClass的prototype上加上父类的无用属性
 
+![1570673858334](C:\Users\Administrator\Desktop\web-study\js\image\1570673858334.png)
 
 ### 原型继承
 
@@ -397,6 +404,10 @@ var p2 = object(person)
 
 Object.create(protp,propertiesObject)
 
+> 可以创建一个没有原型的对象
+>
+> var a = Object.create(null)，不继承Object的方法和属性
+
 只有一个参数
 
 ```js
@@ -408,3 +419,68 @@ var p1 = Object.create(person);
 var p2 = Object.create(person)
 ```
 
+
+
+### 寄生组合继承
+
+解决了子类继承时调用两次父类的问题
+
+> 给子类设置prototype时，直接[原型继承](#原型继承)而不再是父类的实例
+
+```
+function extend (subC, superC) {
+  const subCP = Object.create(superC.prototype)
+  subCP.consctructor = subC
+  subC.prototype = subCP;
+}
+```
+
+
+
+```js
+function Father(name) {
+  this.name = name;
+  this.friends = ['ww']
+}
+Father.prototype.sayName = function(){
+  console.log(this.name)
+}
+
+function Son(name, age) {
+  Father.call(this,name);
+  this.age = age;
+}
+extend(Son, Father)
+Son.prototype.sayAge = function(){
+  console.log(this.age)
+}
+
+var p1 = new Son('zs',18);
+var p2 = new Son('lisi',18);
+```
+
+![1570676114116](C:\Users\Administrator\Desktop\web-study\js\image\1570676114116.png)
+
+
+
+### 方法
+
+- **Object.create()**
+
+- **Object.prototype.hasOwnProperty**
+
+  只会在自身属性中查找，**而不会遍历原型链**
+
+  ```js
+  p1.hasOwnProperty('name')
+  //true
+  p1.hasOwnProperty('sayAge')
+  //false
+  
+  ```
+
+  > 即使属性为null或者undefined 也返回true
+  >
+  > hasOwnProperty不被包会，可能会被改写所以最安全的方法是
+  >
+  > Object.prototype.hasOwnProperty.call(p1,'name')，且不会创建任何对象
