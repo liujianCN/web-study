@@ -317,7 +317,7 @@ function toString(val){
     - 参数：对当前指令操作范围进行限制
     - 修饰符：限制指令功能的触发条件
 
-  
+
 
   > Tips：
   >
@@ -325,7 +325,6 @@ function toString(val){
   >
   > 2、对于特殊指令`v-on`只能绑定Vue方法仓库中的自定义方法，或绑定简单JS表达式
 
-  
 
 #### 1、v-text
 
@@ -773,7 +772,6 @@ function toString(val){
   ```
 
 - **辅助渲染**：`v-for` 指令为提高性能采用部分标签渲染操作（**只针对与需要添加和删除的标签进行渲染操作**）
-
   - `v-for` 默认不改变整体，而是**重复替换使用已有元素**，该方式会导致页面排序功能展示出现问题。
 
   - 为迫使其`v-for`重新排序元素，需要提供一个 `key` 的特殊属性，为每个元素提供唯一key值**不能使用下标**
@@ -785,3 +783,69 @@ function toString(val){
 ```
 
 ​    
+
+
+
+## 6，MVVM原理
+
+- 数据劫持 Object.defineProperty(obj,prop,descriptor)
+
+  - obj 需要操作的对象
+
+  - prop 要定义或修改的属性名
+
+  - descriptor 被定义或者被修改的属性的描述
+
+  - descriptor 分为**数据描述**和**存取描述**，只能有一种描述，否则会报错
+
+    | 共有描述                                                     | **数据描述**                                                 | **存取描述**      |
+    | :----------------------------------------------------------- | :----------------------------------------------------------- | :---------------- |
+    | **configurable**：默认false，为true时该属性的**描述**才会改变，同时该属性才会被删除 | **value**：默认为undefined。可以是任何有效的js值。           | **get：**取值函数 |
+    | **emuerable**：默认false，为true时该属性可枚举               | **writable：**默认为false。为true时该属性可以被赋值运算符改变 | **set：**赋值函数 |
+
+    ```js
+    var o = {}
+    o.a = 1;
+    //等同于
+    Object.defineProperty(o,'a',{
+        value: 1,
+        writable: true,
+        configurable: true,
+        emuerable: true
+    })
+    
+    //存取描述
+    Object.defineProperty(o,'a',{
+        get(){
+            //...
+            return ...
+        }
+            set(nv){
+                ....
+            }
+    })
+    
+    
+    ```
+	mvvm 简单原理
+
+    ```html
+    <body>
+      <p></p>
+      <input type="text" oninput="input(this.value)">
+      <script>
+        let a = '的风景'
+        let data = {};
+        Object.defineProperty(data, 'a', {
+          get() {
+            return a
+          },
+          set(nv) {
+            a = nv;
+            document.querySelector('p').innerText = nv;
+          }
+        })
+        const input = nv => data.a = nv
+      </script>
+    </body>
+    ```
