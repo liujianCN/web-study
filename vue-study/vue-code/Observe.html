@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class Dep {
+      constructor() {
+        this.sub = []
+      }
+      addSub(sub) {
+        this.sub.push(sub)
+      }
+      notify() {
+        this.sub.forEach(sub => sub.update())
+      }
+    }
+
+    class Watcher {
+      constructor(fn) {
+        this.fn = fn
+      }
+      update() {
+        this.fn()
+      }
+    }
+
+    let watch = new Watcher(() => console.log('订阅'))
+    let dep = new Dep;
+    dep.addSub(watch)
+    dep.addSub(watch)
+    dep.notify()
+  </script>
+</body>
+
+</html>

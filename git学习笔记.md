@@ -26,3 +26,9 @@ git push -u origin master
 
 - **git pull**
   - 从远程仓库里拉取最新的代码
+
+
+
+```
+yarn upgrade-interactive --latest
+```
