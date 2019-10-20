@@ -784,9 +784,34 @@ function toString(val){
 
 ​    
 
+#### 10、 **v-bind**
+
+缩写：`:`
+
+语法：
+
+```vue
+<p v-bind:[参数][.修饰符]="取值">{{msg}}</p>
+<p :[参数][.修饰符]="参数">{{msg}}</p>
+```
+
+- 参数
+  - attr：HTML标签属性
+  - prop：动态的绑定一个或者多个特性，或者组件的prop到表达式
 
 
-## 6，MVVM原理
+
+
+
+#### 11、指令总结
+
+- 功能指令：v-pre、v-clock、v-on、v-once。
+- 构成指令：v-text、v-html、v-show、v-if、v-else-if、v-else、v-for、v-bind
+- **构成指令和差值表达式具有响应式特性**
+
+
+
+### 5.3，MVVM原理
 
 - 数据劫持 Object.defineProperty(obj,prop,descriptor)
 
@@ -849,3 +874,355 @@ function toString(val){
       </script>
     </body>
     ```
+
+
+
+### 5.4、双向数据绑定v-model
+
+- js变量变化，页面重新渲染。页面元素变化，更新js变量
+
+- 基于响应式原理，和事件监听。
+
+  ```
+  model ==》基于Object.defineProperty，响应式重新渲染页面  ==》view
+  
+  view ==》使用事件监听页面变化，更新js变量  ==》 model
+  ```
+
+- 仅限于页面可输入表单或可选择元素（或组件）：<input/> <select/> <textarea/>
+
+- 语法：<input v-model='name'/> ，name时model里的数据。
+
+- 修饰符：
+
+  - `.lazy`：将`input`事件变为`change`事件
+  - `.number`：输入字符串转为数字
+  - `.trim`：去除首尾空格。
+
+- 对于不同的元素使用不同的属性和不同的监听事件
+  - `text和textarea`使用`value`属性和`input`事件
+  - checkbox和radio使用checked属性，和change事件
+  - select将value作为prop，和change事件。
+
+#### text
+
+```html
+<input v-model='name'/>
+<p>my name is:{{ name }}</p>
+```
+
+#### textarea
+
+```vue
+<textarea v-model='msg'></textarea>
+<p>message:{{msg}}</p>
+```
+
+> `<textarea>{{ msg }}</textarea>并不会生效`
+
+
+
+#### checkbox
+
+- 单个复选框，绑定到布尔值
+
+  ```html
+  <input type="checkbox" true-value='选中' false-value='未选中' v-model='checked'>
+  data:{
+  	checked: true // 或者'选中'
+  }
+  <!-- 值的绑定 -->
+  <!--true-value='选中' false-value='未选中'-->
+  ```
+
+- 多个复选框，绑定到数组
+
+  ```html
+  <input type="checkbox" value='jack' v-model='checked'>
+  <input type="checkbox" value='tom' v-model='checked'>
+  <input type="checkbox" value='marry' v-model='checked'>
+  data:{
+  	checked:[]//默认选中['jack','tom']
+  }
+  ```
+
+
+#### radio
+
+```html
+<input type="radio" value='jack' v-model='picked'>
+<input type="radio" value='tom' v-model='picked'>
+<input type="radio" value='mary' v-model='picked'>
+data:{
+	picked:''//默认选中picked:'tom'
+}
+```
+
+
+
+#### select
+
+- 单选，绑定字符串
+
+  ```html
+  <select v-model='selected'>
+    <option disabled value="">请选择</option>
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="B">C</option>
+  </select>
+  data:{
+  	selected:''//默认选中selected:'C'
+  }
+  ```
+
+  > 如果 `v-model` 表达式的初始值未能匹配任何选项，`<select>` 元素将被渲染为“未选中”状态。在 iOS 中，这会使用户无法选择第一个选项。因为这样的情况下，iOS 不会触发 change 事件。因此，更推荐像上面这样提供一个值为空的禁用选项。
+
+- 多选，绑定数组
+
+  ```
+  <select v-model='selected' multiple>
+    <option disabled value="">请选择</option>
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="B">C</option>
+  </select>
+  data:{
+  	selected:[]//默认选中selected:['A','B']
+  }
+  ```
+
+
+
+### 6、数据控制
+
+- 自定义数据接口，完成相对复杂的数据处理和监控
+- 两大特点：数据控制和数据包装
+
+#### 6.1、计算属性（computed）
+
+- **数据包装+数据监控**
+
+  ```js
+  new Vue({
+      data:{},
+      computed:{
+          //计算属性
+      },
+      methods:{
+         // 方法
+      }
+  })
+  ```
+
+- 语法：`computed: {key:value}`
+
+  - key：计算属性名称。具有vue的data里的普通变量的功能，可以访问this
+
+  - value：计算属性取值。
+
+    - 取值为函数时：提供计算属性的取值功能。该属性为只读属性。
+
+      ```js
+      computed: {
+        whichSelect(){
+          return '选择的是'+this.selected
+      }
+      ```
+
+    - 取值为Object(get:function,set:function)时。提供该计算属性的取值和修改
+
+      ```js
+      whichSelect:{
+        get(){
+          return this.cl
+        },
+        set(nv){
+          this.cl = nv
+        }
+      }
+      ```
+
+- 特性：
+
+  - 有缓存：只执行一次，依赖项未变化时，或者没有data数据依赖时，不进行计算。
+  - 不能与data里定义的数据同名。
+
+
+
+#### 6.2、过滤器（filters）
+
+- **完成数据包装**
+
+- 范围：插值表达式和v-bind
+
+- 语法：使用`|`连接待处理变量和过滤方法
+
+- 特性：不具有缓存，处理函数内部的this是Window对象。
+
+  ```html
+  <!-- 插值表达式 -->
+  <p>{{ 待处理变量 | 处理方法 }}</p>
+  <p>{{ 待处理变量 | 处理方法() }}</p>
+  
+  <!-- v-bind -->
+  <p v-bind:' 待处理变量 | 处理方法 '></p>
+  <p v-bind:' 待处理变量 | 处理方法() '></p>
+  ```
+
+
+
+1. 局部过滤器
+
+   定义在vue实例里，仅限当前vue实例里使用。
+
+   ```js
+   new Vue({
+       data:{},
+       filters: {
+           toUpperCase(t,a,b,c){
+               //默认参数是待处理变量
+               return t.toUpperCase()
+           }
+       }
+   })
+   ```
+
+2. 全局过滤器
+
+   通过Vue装载的过滤器方法，给所有的vue实例使用。
+
+   > 在Vue实例化之前，同名过滤器优先级低于局部
+
+   ```js
+   Vue.filter('id',handler)
+   ```
+
+
+#### 6.3、监视器（watch）
+
+- **数据监控**
+
+- 功能：实现对vue实例中数据（data，computed）的变化的额外的监控方法
+
+- 特性：监控方法只监听所监听变量**值**的变化，处理函数不能使用箭头函数，否则函数中this不是当前实例，而是Window。
+
+- 组建内构建方法
+
+  ```
+  new Vue({
+      watch: {
+          key: value
+      }
+  })
+  ```
+
+  - key:(String)：被监控的数据变量名称或**对象路径表示法('user.name')**
+
+  ```js
+  methods: {
+    a(){
+      console.log('a');
+    }
+  //监听user变量，不会响应user.a的变化，可以监听user.a
+  //或者对象路径
+      'user.a'(){
+          console.log('a')
+      }
+  ```
+
+
+
+  - value:(String|Function|Object|Array)
+
+    - 字符串：方法名
+
+    ```js
+    //method中的方法名
+    a:'a'
+    ```
+
+
+
+    - 函数：监控方法
+    
+    ```js
+    //处理函数接受2个参数，新值和旧值
+    a: function(nv, ov){
+        console.log(nv, ov)
+    }
+    //简写
+    a(nv, ov){
+        
+    }
+    ```
+    
+    - 对象：监控配置
+    
+    ```js
+    a: {
+        handler: 'a',
+        deep: true,//默认false，是否深度监视
+        immediate: true//默认false，是否立即监视
+    }
+    ```
+    
+    - 数组：一组上述执行方法
+    
+      ```js
+      a: ['a','b',function(){}]
+      ```
+
+
+
+
+
+### 7、页面模板和render函数
+
+1. **模板属性(template)**
+
+   template所指定的页面结构，会替换到el所指定的容器。
+
+   ```
+   new Vue({
+       el: 'app',
+       template: StringDom | StringEl
+   })
+   //template: document.querySelector('#root')
+   //template: '<div>{{msg}}</div>
+   ```
+
+   - StringDom：HTML的字符串定义方式
+   - StringEl：HTML选择器
+
+2. **渲染函数(render)**
+    render函数构成的模板具有**最高优先级**，最终会替换el指向的容器，会使template属性失效。
+
+    ```js
+    render(h){
+      return  h('ul',{class: 'ul'},[
+        h('li',{class:'li'},'li '+this.msg),
+        h('li',{class:'li'},'li '+this.msg)
+      ])
+    }
+    ```
+
+
+### 8、实例属性和方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
