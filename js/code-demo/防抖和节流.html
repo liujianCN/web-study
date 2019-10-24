@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <span>without</span> <input type="text" id="bounce">
+  </div>
+  <div>
+    <span>debounce</span> <input type="text" id="debounce">
+  </div>
+  <div>
+    <span>throttle</span> <input type="text" id="throttle">
+  </div>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.15/lodash.js"></script>
+  <script>
+    // 假设无限次触发：防抖函数永远不会真正执行；节流函数则会按照间隔时间执行
+    //防抖：在事件被触发n秒后再执行回调，如果在这n秒内又被触发，则重新计时。
+    const bounceDom = document.querySelector('#bounce')
+    const debounceDom = document.querySelector('#debounce')
+    const throttleDom = document.querySelector('#throttle')
+    bounceDom.addEventListener('input', function (e) {
+      input(e.target.value)
+    });
+    function input(...args) {
+      console.log(args[0]);
+      //const v = e.target.value
+    }
+    const debounceInput = debounce(input, 500)
+    debounceDom.addEventListener('input', function (e) {
+      const v = e.target.value;
+      debounceInput(v, 1000)
+    })
+    function debounce(fn, delay) {
+      return function (...args) {
+        clearTimeout(fn.id)
+        fn.id = setTimeout(() => fn(...args), delay)
+      }
+    }
+
+    function biu() {
+      console.log('biu', new Date().getSeconds());
+    }
+    function boom() {
+      console.log('boom, boom, boom', new Date().getSeconds());
+    }
+
+    // setInterval(debounce(biu,1900),2000)
+    // setInterval(debounce(boom,3000),2000)
+    var throttleInput = throttle(input, 1000)
+    throttleDom.addEventListener('input', function (e) {
+      throttleInput(e.target.value)
+    })
+
+    // throttle 节流 规定在一个单位时间内，只能触发一次函数。如果这个单位时间内触发多次函数，只有一次生效
+    function throttle(fn, delay) {
+      fn.last = 0
+      return function (...args) {
+        let now = +new Date()
+        if (now - fn.last > delay) {
+          fn(...args)
+          fn.last = now
+        }
+      }
+    }
+    const throttleBiu = throttle(biu, 300)
+    //setInterval(throttleBiu,900)
+    window.onresize = function(){
+      // throttleBiu(123);
+      debounceInput(123)
+    };
+
+
+  </script>
+</body>
+
+</html>

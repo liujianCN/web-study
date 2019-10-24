@@ -1,0 +1,75 @@
+.Ticket_Order_Change_Confirm__Container{
+    width: 1000px;
+    margin:0 auto;
+    .Ticket_Order_Confirm_Position{
+        font-size: 14px;
+        margin-bottom: 25px;
+        a{
+            color: #000;
+            text-decoration: none;
+        }
+    }
+    .Order_Change_Confirm_Pay_Methods{
+      padding: 40px 0 40px 46px;
+      div{
+        float: left;
+        width: 270px;
+        height: 50px;
+        margin-left: 30px;
+        background-color: #ccc;
+      }
+    }
+    .Order_Change_Confirm_Pay_Tips{
+        background-color: #F4F4F4;
+        padding: 25px 50px 15px;
+        font-size: 12px;
+        line-height: 16px;
+        border-top: 1px solid #e3e3e3;
+        li{
+            list-style-type: square;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+    }
+    .Order_Change_Confirm_Pay_Itinerary{
+        padding: 25px 15px;
+        line-height: 50px;
+        font-size: 12px;
+        .Order_Change_Confirm_Pay_Itinerary_Type{
+          margin-bottom: 10px;
+          div{
+            float: left;
+          }
+
+          .Order_Change_Confirm_Pay_Itinerary__Yes,.Order_Change_Confirm_Pay_Itinerary__No{
+            width: 120px;
+            height: 50px;
+            color: #ffffff;
+            text-align: center;
+            margin-left: 10px;
+          }
+          .Order_Change_Confirm_Pay_Itinerary__Yes{
+            background-color: #ff616d;
+          }
+          .Order_Change_Confirm_Pay_Itinerary__No{
+            background-color: #faa205;
+          }
+        }
+        .Order_Change_Confirm_Pay_Itinerary__Text{
+          width: 740px;
+          background-color: #f4f4f4;
+          padding-left: 10px;
+      }
+   }
+   .Order_Change_Confirm_Pay_Amount{
+     font-size: 20px;
+     margin-top: 50px;
+     .Order_Change_Confirm_Pay_Money{
+       color: #e01222;
+     }
+   }
+   .Order_Change_Confirm_Operation_Btn{
+     margin: 9px 0 36px 0;
+     text-align: center;
+   }
+}

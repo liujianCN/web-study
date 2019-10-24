@@ -1,0 +1,45 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  font-family: 'Microsoft Yahei',\5FAE\8F6F\96C5\9ED1,'Open Sans','Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1;
+}
+pre {
+  white-space: pre-wrap;
+  font-family: Helvetica, Microsoft Yahei, Arial, sans-serif;
+}
+ol li,ul li {
+ list-style:none;
+}
+ul,ol {
+  list-style-type: none;
+}
+button,input{
+  outline: none;
+}
+img {
+  border: 0;
+}
+img[src=""],img:not([src]){
+  opacity: 0;
+  /*This works in IE 8 & 9 too*/
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  /*IE4-IE9*/
+  filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+}
+a:focus {
+  outline: none;
+}
+address,dfn,em,i {
+  font-style:normal;
+}
+input,
+select,
+textarea {
+  font-family: Microsoft Yahei, Arial, Helvetica, sans-serif;
+}
+iframe {
+  border: 0;
+}

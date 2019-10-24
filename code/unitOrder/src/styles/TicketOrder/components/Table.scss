@@ -1,0 +1,36 @@
+.Order_Table_Content{
+    width: 100%;
+    border-collapse:collapse;
+    text-align: center;
+    border:0px;
+    position: relative;
+}
+.Order_Table_Title{
+    background-color: #727171;
+    color: #ffffff;
+    height: 40px;
+    font-size: 16px;
+    th{
+        font-weight: normal;
+    }
+    &.orderChange{
+        font-size: 12px;
+        background-color: #e41238;
+        height: 30px;
+    }
+    &.refundDetail{
+        background-color: #efefef;
+        color: #000;
+    }
+}
+.Order_Table_Item{
+    height: 68px;
+    line-height: 20px;
+    font-size: 14px;
+    &.orderChange{
+        font-size: 12px;
+    }
+    .Choose_Passenger{
+        width: 50px;
+    }
+}

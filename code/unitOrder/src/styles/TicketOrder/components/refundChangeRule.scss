@@ -1,0 +1,38 @@
+.Refund_Change_Rule__Container{
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #D4D4D4;
+  color: #333333;
+  border-radius: 5px;
+  width: 806px;
+  padding: 5px;
+  z-index: 99999;
+  .Refund_Change_Rule__Content{
+    border: 1px solid #D4D4D4;
+    border-bottom: none;
+    font-size: 12px;
+  }
+  .Refund_Change_Rule__Item{
+    float: left;
+    text-align: center;
+    border-right: 1px solid #c9c4c4;
+    &:last-child{
+      border-right: none;
+    }
+    dt{
+      width: 160px;
+      height: 60px;
+      line-height: 12px;
+      background: #f2eeee;
+      padding: 10px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #c9c4c4;
+      display: table-cell;
+      vertical-align: middle;
+    }
+    dd{
+      border-bottom: 1px solid #c9c4c4;
+      line-height: 50px;
+    }
+  }
+}

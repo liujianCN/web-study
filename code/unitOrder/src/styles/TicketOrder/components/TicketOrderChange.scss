@@ -1,0 +1,41 @@
+.Order_Change_Step__Content{
+    width: 1000px;
+    height: 23px;
+    line-height: 23px;
+    border: 1px solid #e3e3e3;
+    margin:50px auto 25px;
+    .Order_Change_Step__Item{
+        float: left;
+        color: #808080;
+        font-size: 12px;
+        text-align: center;
+        .Order_Change_Step__Item_Icon_Right,.Order_Change_Step__Item_Icon_Left,.Order_Change_Step__Item_Icon_Middle,.Order_Change_Step__Item_Text{
+            float: left;
+            height: 23px;
+            background: no-repeat center;
+        }
+        .Order_Change_Step__Item_Icon_Right{
+            width: 27px;
+        }
+        .Order_Change_Step__Item_Icon_Left{
+            width: 29px;
+        }
+        .Order_Change_Step__Item_Icon_Middle{
+            width: 15px;
+        }
+        .Order_Change_Step__Item_Text{
+            margin: 0 24px;
+            &.current{
+                width: 109px;
+                height: 30px;
+                line-height: 30px;
+                margin-top: -4px;
+                font-size: 16px;
+                color: #ffffff;
+            }
+            &.finished{
+                color: #ff0000;
+            }
+        }
+    }
+}

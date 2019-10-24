@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Document</title>
+</head>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
+<body>
+  <div id="app">
+    <span>lalla</span>
+  </div>
+  <template id="root">
+    <div>
+      <div>{{age}}</div>
+      <div ref=msg @click=say>{{msg}}</div>
+      <input type="text" v-model=msg>
+    </div>
+  </template>
+</body>
+<script>
+  const vm = new Vue({
+    data: {
+      msg: '我是',
+      age: 1
+    },
+    template: '#root',
+    methods: {
+      async say() {
+        console.log(this.$refs.msg);
+        this.msg = 123
+        this.$nextTick(()=>console.log(this.$refs.msg))
+        // this.$destroy()
+      }
+    },
+    // beforeCreate() {
+    //   console.group('beforeCreate')
+    //   console.log('this',this)
+    //   console.log('this.$el',this.$el)
+    //   console.log('this.$options',this.$options)
+    //   console.log('this.$data',this.$data)
+    //   console.log('this.msg',this.msg)
+    //   console.log('this.say',this.say);
+    //   console.groupEnd('beforeCreate')
+    //   //this.say()
+    //   debugger;
+    // },
+    created() {
+      console.group('created')
+      console.log('this',this)
+      console.log('this.$el',this.$el)
+      console.log('this.$options',this.$options)
+      console.log('this.$data',this.$data)
+      console.log('this.msg',this.msg)
+      console.log('this.say',this.say);
+      console.groupEnd('created')
+      //debugger;
+    },
+    // beforeMount() {
+    //   console.group('beforeMount')
+    //   console.log('this',this)
+    //   console.log('this.$el',this.$el)
+    //   console.log('this.$options',this.$options)
+    //   console.log('this.$data',this.$data)
+    //   console.log('this.msg',this.msg)
+    //   console.log('this.say',this.say);
+    //   console.log('this.say',this.say);
+    //   console.groupEnd('beforeMount')
+    //   debugger;
+    // },
+    mounted() {
+      console.group('mounted')
+      console.log('this',this)
+      console.log('this.$el',this.$el)
+      console.log('this.$options',this.$options)
+      console.log('this.$data',this.$data)
+      console.log('this.msg',this.msg)
+      console.log('this.say',this.say);
+      console.groupEnd('mounted')
+      this.age = this.age +1
+      this.age = this.age +1
+      this.age = this.age +1
+      // debugger;
+    },
+    beforeUpdate() {
+      console.group('beforeUpdate')
+      console.log('this', this)
+      console.log('this.$el', this.$el)
+      console.log('this.$options', this.$options)
+      console.log('this.$data', this.$data)
+      console.log('this.msg', this.msg)
+      console.log('this.say', this.say);
+      console.groupEnd('beforeUpdate')
+      debugger;
+    },
+    updated() {
+      console.group('updated')
+      console.log('this', this)
+      console.log('this.$el', this.$el)
+      console.log('this.$options', this.$options)
+      console.log('this.$data', this.$data)
+      console.log('this.msg', this.msg)
+      console.log('this.say', this.say);
+      console.groupEnd('updated')
+      debugger;
+    },
+    beforeDestroy() {
+      console.group('beforeDestroy')
+      console.log('this', this)
+      console.log('this.$el', this.$el)
+      console.log('this.$options', this.$options)
+      console.log('this.$data', this.$data)
+      console.log('this.msg', this.msg)
+      console.log('this.say', this.say);
+      console.groupEnd('beforeDestroy')
+      debugger;
+
+    },
+    destroyed() {
+      console.group('destroyed')
+      console.log('this', this)
+      console.log('this.$el', this.$el)
+      console.log('this.$options', this.$options)
+      console.log('this.$data', this.$data)
+      console.log('this.msg', this.msg)
+      console.log('this.say', this.say);
+      console.groupEnd('destroyed')
+      debugger;
+
+    },
+  })
+  vm.$mount('#app')
+</script>
+
+</html>

@@ -1,0 +1,33 @@
+.Form__Input{
+    height: 30px;
+    padding: 5px;
+    width: 200px;
+    border: 1px solid #e3e3e3;
+    vertical-align: middle;
+    border-radius: 3px;
+    box-sizing: border-box;
+    &:disabled{
+        background-color: #ccc;
+    }
+}
+.Form__Textarea{
+    font-size: 12px;
+    height: 100px;
+    width: 700px;
+    padding: 5px;
+    border: 1px solid #e3e3e3;
+    background-color: #fff;
+    resize: none;
+    &:hover {
+        box-shadow: 0 0 1px #F1CA7E;
+    }
+    &:disabled{
+        background-color: #fff3f3;
+        cursor: not-allowed;
+    }
+
+}
+.Form__Radio{
+    margin-right: 8px;
+    vertical-align: middle
+}

@@ -1,0 +1,114 @@
+.Ticket_Order_Change_Flight_List__Container{
+    text-align: center;
+    .Ticket_Order_Change_Flight_List_Title{
+        border: 1px solid #e3e3e3;
+        background: #F4F4F4;
+        font-size: 16px;
+        height: 36px;
+        line-height: 36px;
+        border-bottom: none;
+        div{
+            float: left;
+        }
+        span {
+            background-color: #f8a9af;
+            color: #fff;
+            font-size: 12px;
+            padding: 0 5px;
+            margin-left: 5px;
+            position: absolute;
+            margin-top: 9.4px;
+            height: 17px;
+            line-height: 17px;
+        }
+    }
+    .Ticket_Order_Change_Flight_List__Content{
+        width: 100%;
+        border-collapse:collapse;
+        font-size: 12px;
+        border:0px;
+        .Ticket_Order_Change_Flight_List_Item{
+            border: 1px solid #e3e3e3;
+            background: #f8f8ff;
+            line-height:16px;
+            td{
+                width: 100px;
+                border-left: 1px solid #e3e3e3;
+                &:first-child{
+                    border-left: none;
+                }
+            }
+            .Ticket_Order_Change_Flight_Item_Info{
+                height: 30px;
+                width: 697px;
+                padding: 15px 0;
+                dd{
+                    border-left: 1px solid #e3e3e3;
+                    float: left;
+                    &:first-child{
+                        border-left: none;
+                    }
+                }
+                .Flight_Item_Info_Seg{
+                    width: 279px;
+                    padding: 6px 0;
+                }
+                .Flight_Item_Info_Date{
+                    width: 179px;
+                }
+                .Flight_Item_Info_FlightNum{
+                    width: 119px;
+                }
+                .Flight_Item_Info_Duration{
+                    width: 117px;
+                }
+            }
+        }
+        .Order_Change_Item_Brand_Detail{
+            text-align: left;
+            font-size: 12px;
+            ul{
+                line-height: 40px;
+                font-size: 16px;
+                li{
+                    color: #e01222;
+                    text-decoration: underline;
+                }
+            }
+            dl{
+                line-height: 25px;
+                margin-bottom: 3px;
+                dt{
+                    float: left;
+                    width: 90px;
+                    height: 25px;
+                    background-color: #898989;
+                    color: #fff;
+                    padding-left: 5px;
+                    text-align: left;
+                }
+                dd{
+                    float: left;
+                    width: 894px;
+                    height: 25px;
+                    background-color: #EFEFEF;
+                    padding-left: 10px;
+                    //box-sizing: border-box;
+                }
+            }
+            .Order_Change_Item_Brand_Detail_Baggages{
+                line-height: 75px;
+                height: 75px;
+                dt{
+                    height: 75px;
+                }
+                dd{
+                    width: 884px;
+                    padding-right: 10px;
+                    height: 75px;
+                    line-height: 25px;
+                }
+            }
+        }
+    }
+}

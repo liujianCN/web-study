@@ -1,0 +1,32 @@
+.Ticket_Order_Change_Select__Container{
+    width: 1000px;
+    margin:0 auto;
+    .Ticket_Order_Change_Search_Flight{
+        height: 98px;
+        line-height: 98px;
+        background-color: #f1f1f1;
+        padding-left: 30px;
+        margin-bottom: 26px;
+        .Ticket_Order_Change_Select_Date_Tip{
+            float: left;
+        }
+        .Ticket_Order_Change_Select_Date_Input{
+            float: left;
+            margin: 27px 10px 0 24px;
+            height: 44px;
+            line-height: 44px;
+        }
+    }
+    .Ticket_Order_Change_Operation_Btn{
+        text-align: center;
+        margin: 20px 0;
+    }
+}
+.Ticket_Order_Change_Position{
+    font-size: 14px;
+    margin-bottom: 25px;
+    a{
+        color: #000;
+        text-decoration: none;
+    }
+}

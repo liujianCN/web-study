@@ -1,0 +1,19 @@
+.Card__content{
+    width: 1000px;
+    margin: 0 auto 25px;
+    border: 1px solid #e3e3e3;
+    .Card__title{
+        font-size: 16px;    
+        background: #f4f4f4;
+        height: 42px;
+        line-height: 42px;
+        color: #e01222;
+        border-bottom: 1px solid #e3e3e3;
+        .Card__title_icon{
+            height: 43px;
+            width: 40px;            
+            float: left;
+            background: no-repeat center;
+        }
+    }
+}

@@ -1,0 +1,63 @@
+.Refund_Application_Form__Container{
+    background-color: #F4F4F4;
+    position: relative;
+    .Refund_applicant_Info_Icon,.Refund_Application_Reason_Icon{
+        width: 143px;
+        height: 60px;
+        position: absolute;
+        left: 0;
+        top: 30px;
+        line-height: 60px;
+        padding-left: 20px;
+        font-size: 16px;
+        color: #ffffff;
+    }
+    .Refund_Application_Reason_Icon{
+        top: 125px;
+    }
+    .Refund_Application_Form__Content{
+        background-color: #fff;
+        margin-left: 150px;
+        padding: 30px 60px;
+        .Refund_applicant_Info{
+            font-size: 14px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #e3e3e3;
+            margin-bottom: 25px;
+        }
+        .Refund_Application_Reason{
+            padding-bottom: 15px;
+            .Refund_Application_Reason_Item{
+                margin-bottom: 20px;
+                .Refund_Airline_Reason_Content{
+                    padding: 18px 0 0 38px;
+                    label{
+                        margin-right: 30px;
+                    }
+                }
+                .Refund_Application_Reason_Tips{
+                    font-size: 12px;
+                    line-height: 38px;
+                    color: #808080;
+                }
+            }
+        }
+    }
+}
+.Refund_Application_Passenger_Notes{
+    width: 970px;
+    margin: 0 auto 200px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    vertical-align: middle;
+    a{
+        color: #ff0000;
+        text-decoration: none;
+    }
+}
+.Refund_Application_Btn_Group{
+    width: 1000px;
+    margin: 0 auto 40px;
+    text-align: right;
+}

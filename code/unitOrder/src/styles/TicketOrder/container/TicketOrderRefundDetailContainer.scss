@@ -1,0 +1,30 @@
+.Refund_Detail_Status__Container{
+    background-color: #F4F4F4;
+    position: relative;
+    .Refund_Detail_First_instance,.Refund_Detail_Second_instance,.Refund_Detail_Result{
+        width: 143px;
+        height: 60px;
+        position: absolute;
+        left: 0;
+        top: 30px;
+        line-height: 60px;
+        padding-left: 20px;
+        font-size: 16px;
+        color: #ffffff;
+    }
+    .Refund_Detail_Second_instance{
+        top: 195px;
+    }
+    .Refund_Detail_Result{
+        top: 360px;
+    }
+    .Refund_Detail_Status__Content{
+        background-color: #fff;
+        margin-left: 150px;
+        padding: 30px 60px;
+        h3{
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+    }
+}
