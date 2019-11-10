@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>indexOf</title>
+</head>
+
+<body>
+  <script>
+    (function () {
+      //遍历字符串
+      // function myIndexOf(s) {
+      //   const sL = s.length;
+      //   const tL = this.length;
+      //   res = -1
+      //   console.log(sL, tL);
+      //   for(let i=0; i<= tL-sL; i++){
+      //     if(this.slice(i, i+sL)===s){
+      //       res = i
+      //     }
+      //   }
+      //   return res
+      // }
+      function myIndexOf(s) {
+        const reg = new RegExp(s);
+        const res = reg.exec(this)
+        console.log(res);
+        return(res?res.index:-1)
+      }
+      String.prototype.myIndexOf = myIndexOf;
+
+    })()
+    const T = 'tiaozhanzijiji'
+    const S = 'tiao'
+    console.log(T.myIndexOf(S));
+  </script>
+</body>
+
+</html>
