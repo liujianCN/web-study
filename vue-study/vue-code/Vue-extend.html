@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Document</title>
+</head>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
+<body>
+
+</body>
+<script>
+const myVue = Vue.extend({
+  template:'<div>继承</div>',
+  methods:{
+    say(){
+      console.log(123);
+    }
+  },
+  beforeCreate(){
+    console.log('beforeCreate');
+  },
+  created(){
+    console.log('created');
+  },
+  beforeMount(){
+    console.log('beforeMount');
+  },
+  mounted(){
+    console.log('mounted');
+  }
+})
+const myComponent1 = new myVue()
+const myComponent2 = new myVue()
+const myComponent3 = new myVue()
+</script>
+
+</html>
