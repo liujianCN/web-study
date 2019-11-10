@@ -216,5 +216,3 @@ var c = a.split(/(e)/)
   console.log(matches_array);
   // ['A', 'B', 'C', 'D', 'E', 'a', 'b', 'c', 'd', 'e']
   ```
-
-  
