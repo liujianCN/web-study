@@ -28,6 +28,10 @@ git push -u origin master
   - 从远程仓库里拉取最新的代码
 
 
+- **git reset --hard HEAD^**
+  - 撤销工作区的上一次commit，工作区和暂存区都会没有，撤销之前备份
+
+
 
 ```
 yarn upgrade-interactive --latest
