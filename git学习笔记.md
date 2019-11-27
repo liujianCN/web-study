@@ -32,3 +32,9 @@ git push -u origin master
 ```
 yarn upgrade-interactive --latest
 ```
+- **"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"**
+  - 配置vscode默认的terminal
+
+- 配置git提交模板
+- touch m.template
+- git config --global commit.tempalte C:\m.template
