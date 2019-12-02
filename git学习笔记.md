@@ -29,9 +29,23 @@ git push -u origin master
 
 
 - **git reset --hard HEAD^**
+  
   - 撤销工作区的上一次commit，工作区和暂存区都会没有，撤销之前备份
+- **git branch -d branchName**
 
+  - 删除分支，先切换到别的分支
+- **git branch branchName** 
 
+  - 创建分支
+- **git checkout -b branchName**
+
+  - 创建分支，并切换
+- **git pull origin branchName**
+
+  - 拉取远程分支
+- **git checkout -b branchName origin/branch**
+  
+  - 从branch分支创建新分支
 
 ```
 yarn upgrade-interactive --latest
