@@ -5,34 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Document</title>
-<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="./lib/react.development.js" crossorigin></script>
+<script src="./lib/react-dom.development.js" crossorigin></script>
+<script src="./lib/babel.min.js"></script>
 <script src="https://unpkg.com/dayjs"></script>
 </head>
 
 <body>
   <div id="app"></div>
   <script type="text/babel">
-    const { Component, createRef } = React;
+    const { Component, createRef, forwardRef, Fragment } = React;
     class App extends Component {
-      constructor(props){
+      constructor(props) {
         super(props)
         this.refB = createRef()
       }
       componentDidMount() {
         console.log(this.refB);
       }
-      
-      
-      render(){
+
+
+      render() {
         return (
           <div>
-            <B refb={this.refB}/>
+            <B refb={this.refB} />
           </div>
         )
       }
-      
+
     }
     class B extends Component {
       state = {
@@ -41,7 +41,7 @@
       say = () => {
         console.log('say');
       }
-      render(){
+      render() {
         return (
           <div>
             <button onClick={this.add}>加</button>
@@ -50,7 +50,41 @@
         )
       }
     }
-    ReactDOM.render(<App/>,document.getElementById('app'))
+    function CustomTextInput(props) {
+      return (
+        <div>
+          <input ref={props.inputRef} />
+        </div>
+      );
+    }
+    class D extends Component {
+      render(){
+        return(
+          <div>123</div>
+        )
+      }
+    }
+
+    class Parent extends React.Component {
+      componentDidMount(){
+        console.log(this.inputElement);
+        console.log(this.divElement);
+
+      }
+      render() {
+        return (
+          <Fragment>
+            <CustomTextInput
+              inputRef={el => this.inputElement = el}
+            />
+            <D
+              ref={el => this.divElement = el}
+            />
+          </Fragment>
+        );
+      }
+    }
+    ReactDOM.render(<Parent />, document.getElementById('app'))
   </script>
 </body>
 

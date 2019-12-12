@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,11 @@
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="https://unpkg.com/dayjs"></script>
 </head>
+
 <body>
   <div id="app"></div>
   <script type="text/babe">
-    const { useState, useEffect,useMemo } = React;
+    const { useState, useEffect,useMemo, useCallback, Fragment } = React;
     const Time = () => {
       const now = useMemo(() => dayjs(new Date()).unix(),[])
       const endTime = useMemo(() => dayjs('2019-09-27').unix(),[])
@@ -44,17 +46,18 @@
     ReactDOM.render(<Time/>,document.getElementById('app'))
   </script>
   <script type="text/babel">
+    const { useState, useEffect,useMemo, useCallback, Fragment } = React;
 
     function AutoFocus(props) {
-       return(
-        <input ref = {props.inputRef} />
+      return (
+        <input ref={props.inputRef} />
       )
-    } 
+    }
 
 
-    
-    class Input extends React.Component{
-      constructor(props){
+
+    class Input extends React.Component {
+      constructor(props) {
         super(props);
         this.inputRef = React.createRef()
       }
@@ -63,14 +66,14 @@
         return this.inputRef.current.value
       }
 
-      render(){
+      render() {
         return (
-          <input ref={this.inputRef} value="是的"/>
+          <input ref={this.inputRef} value="是的" />
         )
       }
     }
-    class App extends React.Component{
-      constructor(props){
+    class App extends React.Component {
+      constructor(props) {
         super(props);
         // this.inputRef = null;
         //this.bindInputRef = e => this.inputRef = e
@@ -81,42 +84,42 @@
         name: 'sara'
       }
       static defaultProps = {
-        age:16
+        age: 16
       }
       handleClick = e => {
         //console.log(this.state);
         //console.log(e);
 
-        this.setState(state => ({name:'安静'+state.name}),()=>{console.log(this.state);})
+        this.setState(state => ({ name: '安静' + state.name }), () => { console.log(this.state); })
         //this.setState(state => ({name:'吵闹'+state.name}))
         //console.log(this.state);
         this.setState({
-          name:'吵闹'+this.state.name
+          name: '吵闹' + this.state.name
         })
       }
-      
+
       componentDidMount() {
         console.log(this.inputRef);
       }
-      
-      
 
-      render(){
+
+
+      render() {
         console.log(this.state);
         return (
           <div>
             <div onClick={this.handleClick}>{this.state.name}---{this.props.name} --- {this.props.age}</div>
             {/*<input ref = {this.bindInputRef} />*/}
-           {/* <Input ref={this.bindInputRef}/> */}
-           
-           {/*
+            {/* <Input ref={this.bindInputRef}/> */}
+
+            {/*
             *<AutoFocus
             inputRef={this.bindInputRef}
            />          
            */}
-           <AutoFocus
-            inputRef={this.inputRef}
-           />
+            <AutoFocus
+              inputRef={this.inputRef}
+            />
           </div>
         )
       }
@@ -125,60 +128,85 @@
 
 
     function CustomTextInput(props) {
-  return (
-    <div ref={props.inputRef}>
-      <input />
-    </div>
-  );
-}
+      return (
+        <div ref={props.inputRef}>
+          <input />
+        </div>
+      );
+    }
 
-class Parent extends React.Component {
-  componentDidMount() {
-    console.log(this.inputElement);
-  }
-  
-  render() {
-    return (
-      <CustomTextInput
-        inputRef={el => this.inputElement = el}
-      />
-    );
-  }
-}
+    class Parent extends React.Component {
+      componentDidMount() {
+        console.log(this.inputElement);
+      }
 
-class FlavorForm extends React.Component {
-  constructor(props) {
-    super(props);
-    //默认值：椰子
-    this.state = {value: ['coconut','mango']};
-    this.sref = React.createRef()
+      render() {
+        return (
+          <CustomTextInput
+            inputRef={el => this.inputElement = el}
+          />
+        );
+      }
+    }
+    function A(props) {
+      const { a } = props;
+      //useMemo有类似computer计算属性的缓存效果
+      // const f = useMemo(()=>{
+      //   console.log(123);
+      //   return a.item
+      // },[a])
+      // const f = ()=> {
+      //   console.log(123);
+      //   // return <Fragment>{a.item}</Fragment>
+      //   return a.item
+      // }
+      const f = useCallback(
+        (v) => {
+          console.log(1234);
+          return a.item + '+' + v;
+        },
+        [a],
+      )
+      return (
+        <ul>
+          <li>{f(1)}</li>
+          <li>{f(1)}</li>
+          <li>{f(1)}</li>
+        </ul>
+      )
+    }
 
-    this.handleChange = this.handleChange.bind(this);
-  }
+    class FlavorForm extends React.Component {
+      constructor(props) {
+        super(props);
+        //默认值：椰子
+        this.state = {
+          value: ['coconut', 'mango'],
+          a: {
+            item: 456
+          }
+        };
+        this.sref = React.createRef()
 
-  handleChange(e) {
-    //const value = Array.from(new Set([...this.state.value,e.target.value]))
-    // this.setState(state => ({value: [...state,e.target.value]}))
-    //this.setState({value});
-    console.log(this.sref.current.value);
-  }
+        this.handleChange = this.handleChange.bind(this);
+      }
 
-  render() {
-    return (
-        <label>
-          选择你喜欢的风味:
-          <select multiple={true} ref = {this.sref} onChange = {this.handleChange}>
-            <option value="grapefruit">葡萄柚</option>
-            <option value="lime">酸橙</option>
-            <option value="coconut">椰子</option>
-            <option value="mango">芒果</option>
-          </select>
-        </label>
-    );
-  }
-}
-    ReactDOM.render(<FlavorForm />,document.getElementById('app'))
+      handleChange(e) {
+        //const value = Array.from(new Set([...this.state.value,e.target.value]))
+        // this.setState(state => ({value: [...state,e.target.value]}))
+        //this.setState({value});
+        console.log(this.sref.current.value);
+      }
+
+      render() {
+        return (
+          <A a={this.state.a} />
+        );
+      }
+    }
+    ReactDOM.render(<FlavorForm />, document.getElementById('app'))
     // ReactDOM.render(<Parent name='linux'/>,document.getElementById('app'))
   </script>
 </body>
+
 </html>
