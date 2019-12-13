@@ -1,22 +1,9 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const webpack = require('webpack');
 
-const dir = '../'
-const projectRoot = path.resolve(__dirname, dir)
-
-const resolve = p => path.resolve(__dirname, dir, p);
+const projectRoot = path.resolve(__dirname, '../');
+const resolve = p => path.resolve(__dirname, '../', p);
 
 module.exports = {
-  mode: 'development',
-  devtool: 'cheap-module-eval-source-map',
-  devServer: {
-    contentBase: resolve('dev'),
-    open: true,
-    port: 10086,
-    //hot: true,
-    overlay: true
-  },
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
@@ -29,21 +16,16 @@ module.exports = {
       'selectors': resolve('src/selectors'),
       'store': resolve('src/redux/store'),
       'assets': resolve('src/assets'),
-      'http': resolve('src/http/index'),
+      'http': resolve('src/http'),
       'reducers': resolve('src/redux/reducers'),
       'actions': resolve('src/redux/actions'),
       'indexJS': resolve('src/indexJS/indexJS'),
       'CONF': resolve('src/CONF'),
       'image': resolve('src/assets/images')
-      //'react-dom': '@hot-loader/react-dom'
     }
   },
-  entry: ['@/main.js'],
-  output: {
-    path: resolve('dist'),
-    filename: '[name].[hash:8].js',
-    chunkFilename: '[name].[hash:8].js'
-  },
+  entry: './src/main.js',
+
   module: {
     rules: [
       {
@@ -85,18 +67,5 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'API': JSON.stringify(process.env.API),
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'PLATFORM': JSON.stringify(process.env.PLATFORM)
-      }
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/index.html'
-    }),
-    new webpack.HotModuleReplacementPlugin()
-  ]
-}
+  }
+};

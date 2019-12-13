@@ -1,16 +1,13 @@
 {
   "name": "small-apes-mgr",
   "version": "1.0.0",
-  "description": "这是一个小猿码社的管理系统",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.config.js",
     "build": "cross-env NODE_ENV=production webpack --progress --config build/webpack.prod.config.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/liuzhou/small-apes-mgr.git"
-  },
+
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -21,7 +18,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.5.5",
-    "@babel/runtime-corejs2": "^7.5.5",
+    "@babel/runtime-corejs3": "^7.5.5",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.12.0",

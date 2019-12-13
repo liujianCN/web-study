@@ -9,12 +9,12 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = {
   test_redux,
-  test_saga:() => ({ type:'TEST_SAGA_LATEST'}),
+  test_saga: () => ({ type: 'TEST_SAGA_LATEST' }),
   test_thunk,
   testSagaRace,
   testSagaRaceCancel: () => ({ type: 'TEST_SAGA_CANCEL' }),
-  testSagaRaceBGStart: () => ({type:'BACKGROUND_TASK_START'}),
-  testSagaRaceBGCancel: () => ({type:'BACKGROUND_TASK_CANCEL'})
+  testSagaRaceBGStart: () => ({ type: 'BACKGROUND_TASK_START' }),
+  testSagaRaceBGCancel: () => ({ type: 'BACKGROUND_TASK_CANCEL' })
 }
 const Test = (props) => {
   const {
@@ -60,11 +60,11 @@ const Test = (props) => {
   }
   return (
     <div>
-      <button onClick={handleTestSaga}>TEST_SAGA</button><br/>
-      <button onClick={handleTestThunk}>TEST_Thunk</button><br/>
-      <button onClick={handleTestRedux}>TEST_Redux</button><br/>
-      <button onClick={handleSagaRace}>开始异步race</button><br/>
-      <button onClick={handleSagaRaceCancel}>取消race</button><br/>
+      <button onClick={handleTestSaga}>TEST_SAGA</button><br />
+      <button onClick={handleTestThunk}>TEST_Thunk</button><br />
+      <button onClick={handleTestRedux}>TEST_Redux</button><br />
+      <button onClick={handleSagaRace}>开始异步race</button><br />
+      <button onClick={handleSagaRaceCancel}>取消race</button><br />
       <button onClick={handleTestSagaRaceStart}>开启后台</button> ----
       <button onClick={handleTestSagaRaceCancel}>关闭后台</button>
       <div>{headerTitle}</div>
@@ -74,4 +74,4 @@ const Test = (props) => {
   );
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(Test);
+export default connect(mapStateToProps, mapDispatchToProps)(Test);
