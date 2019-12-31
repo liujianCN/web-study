@@ -40,7 +40,7 @@ console.log(sum1(1, 3, 8))
 /**
  * 可选参数必须跟在必需参数后面，可选参数后面不允许在有必需参数
  */
-// let sum2 = (x: number, y: number, z?: number, q: number): number => z ? x + y + z : x + y ;
+let sum2 = (x: number, y: number, z?: number, q: number = 3): number => z ? x + y + z + q : x + y ;
 
 
 
@@ -48,11 +48,11 @@ console.log(sum1(1, 3, 8))
 
 /********************************   参数默认值  ****************************** */
 
-let sum2 = (x: number = 5, y: number, z: number, q: number = 10): number => x + y + z + q;
+let sum3 = (x: number = 5, y: number, z: number, q: number = 10): number => x + y + z + q;
 
-console.log(sum2(undefined, 2, 3))
-console.log(sum2(1, 2, 3))
-console.log(sum2(1, 2, 3, 5))
+console.log(sum3(undefined, 2, 3))
+console.log(sum3(1, 2, 3))
+console.log(sum3(1, 2, 3, 5))
 
 /**
  * ts会将默认参数的参数识别为可选参数， 但不受【可选参数必须在最后】的限制;
@@ -65,12 +65,12 @@ console.log(sum2(1, 2, 3, 5))
 
 /********************************   剩余参数 ...  ****************************** */
 
-let sum3 = (x: number[], ...args: number[]): number[] => {
+let sum4 = (x: number[], ...args: number[]): number[] => {
   x.push(...args)
   return x
 }
 
-console.log(sum3([], 1, 2, 3))
+console.log(sum4([], 1, 2, 3))
 
 
 
