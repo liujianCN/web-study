@@ -87,7 +87,7 @@ person1.sayName === person2.sayName
 
 每一个函数对象都有一个prototype属性，实例可以共享prototype上的属性和方法。
 
-```
+```js
 function Person(){};
 Person.prototype.name = 'ww';
 Person.prototype.sayName = function(){
@@ -427,12 +427,18 @@ var p2 = Object.create(person)
 
 > 给子类设置prototype时，直接[原型继承](#原型继承)而不再是父类的实例
 
-```
+```js
 function extend (subC, superC) {
   const subCP = Object.create(superC.prototype)
   subCP.consctructor = subC
   subC.prototype = subCP;
 }
+
+//改进
+
+function __(){ this.consctructor = subC }
+
+subC.prototype = (__.prototype = superC.prototype, new __())
 ```
 
 
