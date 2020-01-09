@@ -2,21 +2,26 @@ import { createStore, applyMiddleware } from './index.js'
 import reducer from './reducer.js';
 
 //最里层的next就是createStore的dispatch
+// 最里层的res：next(action)，即createStore的dispatch的返回值。
 const logger = ({getState}) => next => action => {
-  console.log('进入了logger');
-  console.log(action);
-  next(action)
-  console.log('离开了logger');
-  console.log(getState());
+  console.groupCollapsed('进入了logger');
+  console.log('action: ',action);
+  console.log('preState: ',getState());
+  console.groupEnd();
+  let res = next(action);
+  console.groupCollapsed('离开了logger');
+  console.log('action: ',action);
+  console.log('nextState: ',getState());
+  console.groupEnd();
+
+  return res;
 }
 
 const thunk = ({getState, dispatch}) => next => action => {
-  console.log('进入thunk');
   if(typeof action === 'function' ){
     return action(dispatch, getState)
   }
-  next(action)
-  console.log('离开thunk');
+  return next(action)
 }
 
 
@@ -28,6 +33,6 @@ store.dispatch((dispatch) => {
   setTimeout(() => {
     dispatch({
       type: 'SUB'
-    })
+    });
   },1000)
 })

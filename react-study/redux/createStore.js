@@ -17,7 +17,8 @@ export default function createStore(reducer, initialState, enhancer) {
 
   function dispatch(action) {
     curState = reducer(curState, action);
-    currentListeners.forEach(listener => listener(curState))
+    currentListeners.forEach(listener => listener(curState));
+    return action
   }
 
   function subscribe(listener) {
