@@ -34,3 +34,12 @@ let ifArray: NumArray = [1, 2, 3]
 /*********************************  常用表示  *********************************/
 
 let anyArray: any[] = [1, '3', { a: 1 }];
+
+
+/*********************************  测试  *********************************/
+
+type objArray = {label: string, code: number}[]
+
+let objArr: objArray = [{label: 'woshi', code: 9}, {label: 'woshi', code: 9}]
+
+objArr.map(item => item.label)
