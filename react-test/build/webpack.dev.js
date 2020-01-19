@@ -1,31 +1,33 @@
-// const path = require('path');
+// const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
-const baseWebpackConfig = require('./webpack.base')
+const baseConfig = require('./webpack.base')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = webpackMerge(baseWebpackConfig, {
+const { resolve } = require('./utils.js');
+
+
+module.exports = webpackMerge(baseConfig, {
   // 指定构建环境
   mode: 'development',
-  devtool: 'source-map',
-  // output: {
-  //   publicPath: '/',
-  //   devtoolModuleFilenameTemplate: '../[resource-path]'
-  // },
+  devtool: 'eval-source-map',
   devServer: {
     contentBase: false,
     open: true,
-    host: '0.0.0.0',
+    // host: 'localhost',
+    host: 'localhost',
     disableHostCheck: true,
     port: 3001,
     // port: 443,
     // https: true,
-    hot: false,
-    overlay: true
+    overlay: true,
+    hot: true
+    // inline: true
   },
   // 插件
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html'
+      template: resolve('public/index.html')
     })
+    // ,new webpack.HotModuleReplacementPlugin()
   ]
 });

@@ -1,14 +1,18 @@
-const path = require('path');
+const webpack = require('webpack');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const projectRoot = path.resolve(__dirname, '../');
-const resolve = p => path.resolve(__dirname, '../', p);
+const { resolve, isDev } = require('./utils.js');
+
+console.log(process.env.NODE_ENV)
+console.log(isDev)
 
 module.exports = {
+  
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
       '@': resolve('src'),
-      'modules': resolve('src/modules'),
+      'pages': resolve('src/pages'),
       'components': resolve('src/components'),
       'constants': resolve('src/constants'),
       'styles': resolve('src/styles'),
@@ -16,29 +20,20 @@ module.exports = {
       'selectors': resolve('src/selectors'),
       'store': resolve('src/redux/store'),
       'assets': resolve('src/assets'),
-      'http': resolve('src/http'),
-      'reducers': resolve('src/redux/reducers'),
       'actions': resolve('src/redux/actions'),
       'indexJS': resolve('src/indexJS/indexJS'),
       'CONF': resolve('src/CONF'),
-      'image': resolve('src/assets/images')
+      'images': resolve('src/assets/images')
     }
   },
-  entry: './src/main.js',
+
+  entry: resolve('src/main.js'),    // 入口文件
 
   module: {
     rules: [
       {
-        enforce: 'pre',
-        test: /\.jsx?$/,
-        loader: 'eslint-loader',
-        include: projectRoot,
-        exclude: /node_modules/
-      },
-      {
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        include: projectRoot,
         exclude: /node_modules/
       },
       {
@@ -53,19 +48,35 @@ module.exports = {
         }
       },
       {
-        test: /\.(eot|ttf|svg)$/,
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
         use: {
-          loader: 'file-loader'
+          loader: 'file-loader',
+          options: {
+            name: '[name].[hash:8].[ext]',
+            outputPath: 'fonts/'
+          }
         }
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: isDev? ['style-loader', 'css-loader']: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'] // 从右向左解析原则
       },
       {
-        test: /\.(scss|sass)/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
+        test: /\.less$/,
+        use: isDev ? ['style-loader', 'css-loader', { loader: 'less-loader', options: { javascriptEnabled: true } }]:
+              [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', { loader: 'less-loader', options: { javascriptEnabled: true } }]
+      },
+      {
+        test: /\.(sass|scss)$/,
+        use: isDev ? ['style-loader', 'css-loader', 'sass-loader']:
+              [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+      },
     ]
-  }
-};
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.API': JSON.stringify(process.env.API)
+    })
+  ]
+}

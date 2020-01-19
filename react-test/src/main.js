@@ -1,20 +1,13 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-// import { Provider } from 'react-redux';
-// import Store from 'store';
-import Router from './routes/Route';
+import { Provider } from 'react-redux';
+import App from './App';
 
+import store from './redux/store';
 
-//全局样式
-// import 'assets/css/normalize.css';
-
-// ReactDom.render(
-//   <Provider store={Store}>
-//       <Router/>
-//   </Provider>,
-//   document.getElementById('app')
-// );
 ReactDom.render(
-  <Router />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('app')
 );

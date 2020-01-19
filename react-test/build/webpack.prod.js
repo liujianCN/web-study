@@ -1,95 +1,38 @@
 
-const path = require('path');
 const webpackMerge = require('webpack-merge');
-const baseWebpackConfig = require('./webpack.base')
-
+const baseConfig = require('./webpack.base')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// const webpack = require('webpack');
+
+const { resolve } = require('./utils.js');
 
 
-const projectRoot = path.resolve(__dirname, '../');
-
-
-
-module.exports = webpackMerge(baseWebpackConfig, {
+module.exports = webpackMerge(baseConfig, {
   mode: 'production',
   devtool: false,
   output: {
-    // publicPath: '/h5/unifyOrder/',
-    filename: 'js/[name][contenthash:8].js',
-    chunkFilename: 'js/[name][contenthash:8].js'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        loader: 'babel-loader',
-        include: projectRoot
-        // exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpe?g|gif)$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10 * 1024,
-            name: '[name].[ext]',
-            outputPath: 'images/'
-          }
-        }
-      },
-      {
-        test: /\.(eot|ttf|svg)$/,
-        use: {
-          loader: 'file-loader'
-        }
-      },
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader'
-        ]
-      },
-      {
-        test: /\.(scss|sass)/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-        ]
-      }
-    ]
+    filename: 'js/[name][contenthash:8].js'
   },
   optimization: {
+    minimize: true,
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         parallel: true,  //使用多进程并行运行来提高构建速度
-        sourceMap: false,
-        uglifyOptions: {
-          warnings: false,
+        terserOptions: {
           compress: {
-            unused: true,
-            drop_debugger: true,
             drop_console: true
           },
           output: {
             comments: false // 去掉注释
           }
-        }
+        },
+        extractComments: false // 不提取注释，默认true
       }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: {
-          discardComments: { removeAll: true } // 移除注释
-        }
-      })
+      new OptimizeCSSAssetsPlugin({})
     ],
     splitChunks: {
       chunks: 'all',
@@ -121,14 +64,14 @@ module.exports = webpackMerge(baseWebpackConfig, {
     }
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name][contenthash:8].css'
     }),
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/index.html',
-      favicon: './src/assets/favicon.ico',
+      template: resolve('public/index.html'),
+      favicon: resolve('public/favicon.ico'),
       minify: {
         collapseWhitespace: true//html压缩
       }
