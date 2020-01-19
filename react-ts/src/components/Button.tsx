@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 interface Props {
   width: number | string,
   height: number | string,
-  onClick: () => void
+  onClick(e: MouseEvent): () => void
 }
 
 interface State {
