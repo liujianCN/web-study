@@ -1,31 +1,27 @@
-// const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('./webpack.base')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const { resolve } = require('./utils.js');
-
+const devConfig = require('./config/dev.config');
+const { resolve } = require('./utils/common.js');
 
 module.exports = webpackMerge(baseConfig, {
   // 指定构建环境
   mode: 'development',
-  devtool: 'eval-source-map',
+  devtool: 'cheap-module-eval-source-map',
   devServer: {
     contentBase: false,
     open: true,
-    // host: 'localhost',
-    host: 'localhost',
     disableHostCheck: true,
-    port: 3001,
-    // port: 443,
-    // https: true,
     overlay: true,
-    hot: true
-    // inline: true
+    hot: false,
+    host: devConfig.host,
+    port: devConfig.port,
+    proxy: devConfig.proxy
   },
   // 插件
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: resolve('public/favicon.ico'),
       template: resolve('public/index.html')
     })
     // ,new webpack.HotModuleReplacementPlugin()

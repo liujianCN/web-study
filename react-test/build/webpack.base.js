@@ -1,36 +1,22 @@
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-const { resolve, isDev } = require('./utils.js');
-
-console.log(process.env.NODE_ENV)
-console.log(isDev)
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const alias = require('./config/alias');
+const { resolve, isDev } = require('./utils/common.js');
 
 module.exports = {
-  
+  entry: resolve('src/main.js'), // 入口文件
   resolve: {
     extensions: ['.js', '.jsx'],
-    alias: {
-      '@': resolve('src'),
-      'pages': resolve('src/pages'),
-      'components': resolve('src/components'),
-      'constants': resolve('src/constants'),
-      'styles': resolve('src/styles'),
-      'utils': resolve('src/utils'),
-      'selectors': resolve('src/selectors'),
-      'store': resolve('src/redux/store'),
-      'assets': resolve('src/assets'),
-      'actions': resolve('src/redux/actions'),
-      'indexJS': resolve('src/indexJS/indexJS'),
-      'CONF': resolve('src/CONF'),
-      'images': resolve('src/assets/images')
-    }
+    alias: alias
   },
-
-  entry: resolve('src/main.js'),    // 入口文件
-
   module: {
     rules: [
+      {
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        exclude: /node_modules/
+      },
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
@@ -42,7 +28,7 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10 * 1024,
-            name: '[name].[hash:4].[ext]',
+            name: '[name].[hash:8].[ext]',
             outputPath: 'images/'
           }
         }
@@ -59,18 +45,46 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: isDev? ['style-loader', 'css-loader']: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'] // 从右向左解析原则
+        use: isDev ? [
+          'style-loader', 
+          'css-loader'
+        ] : [
+          MiniCssExtractPlugin.loader,
+          'css-loader', 
+          'postcss-loader'
+        ] // 从右向左解析原则
       },
       {
         test: /\.less$/,
-        use: isDev ? ['style-loader', 'css-loader', { loader: 'less-loader', options: { javascriptEnabled: true } }]:
-              [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', { loader: 'less-loader', options: { javascriptEnabled: true } }]
+        use: isDev ? [
+          'style-loader', 
+          'css-loader', 
+          {
+            loader: 'less-loader',
+            options: { javascriptEnabled: true }
+          }
+        ] : [
+          MiniCssExtractPlugin.loader, 
+          'css-loader', 
+          'postcss-loader', 
+          {
+            loader: 'less-loader',
+            options: { javascriptEnabled: true }
+        }]
       },
       {
         test: /\.(sass|scss)$/,
-        use: isDev ? ['style-loader', 'css-loader', 'sass-loader']:
-              [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
-      },
+        use: isDev ? [
+          'style-loader', 
+          'css-loader', 
+          'sass-loader'
+        ] : [
+          MiniCssExtractPlugin.loader, 
+          'css-loader', 
+          'postcss-loader', 
+          'sass-loader'
+        ]
+      }
     ]
   },
 

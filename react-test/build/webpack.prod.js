@@ -1,4 +1,3 @@
-
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('./webpack.base')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -7,21 +6,20 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-
-const { resolve } = require('./utils.js');
-
+const { resolve } = require('./utils/common.js');
 
 module.exports = webpackMerge(baseConfig, {
   mode: 'production',
-  devtool: false,
+  devtool: 'nosources-source-map',
   output: {
-    filename: 'js/[name][contenthash:8].js'
+    filename: 'js/[name].[contenthash:8].js'
   },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
         parallel: true,  //使用多进程并行运行来提高构建速度
+        sourceMap: true,
         terserOptions: {
           compress: {
             drop_console: true
@@ -32,7 +30,7 @@ module.exports = webpackMerge(baseConfig, {
         },
         extractComments: false // 不提取注释，默认true
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin()
     ],
     splitChunks: {
       chunks: 'all',
@@ -66,7 +64,7 @@ module.exports = webpackMerge(baseConfig, {
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'css/[name][contenthash:8].css'
+      filename: 'css/[name].[contenthash:8].css'
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
