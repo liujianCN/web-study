@@ -1,17 +1,28 @@
 import React from 'react';
-import { Input, Button } from 'antd';
-import Home from './Home'
+import Home from './page/Hooks';
 
-const App = () => (
-  <div>
-    <Button type="primary">Primary</Button>
-    <Button>Default</Button>
-    <Button type="dashed">Dashed</Button>
-    <Button type="danger">Danger</Button>
-    <Button type="link">Link</Button>
-    <Input />
-    <Home />
-  </div>
-)
+class App extends React.PureComponent {
+  constructor(props){
+    super(props);
+    this.state ={
+      show: true
+    }
+    this.inputRef = React.createRef();
+  }
+
+  componentDidMount(){
+    // console.log(this.inputRef.current);
+    // this.inputRef.current.focus();
+    // console.log(this.inputRef.current.focus());
+  }
+  render() {
+    return (
+      <>
+        {this.state.show && <Home list={[{ name: 1 }, { name: 2 }]} />}
+        <div onClick={() => this.setState({show: false})}>close</div>
+      </>
+    );
+  }
+}
 
 export default App;
